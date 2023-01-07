@@ -1,20 +1,28 @@
+# Install 
 FROM node:18 AS install
 
 RUN mkdir /app
 WORKDIR /app
 
-COPY package.json yarn.lock .
+COPY package.json .
+COPY yarn.lock .
 
 RUN yarn
 
-COPY jest.config.js tsconfig.json vite.config.json
-COPY src/ index.html .
+COPY jest.config.js .
+COPY tsconfig.json .
+COPY vite.config.ts .
+COPY index.html .
+COPY src/ .
 
+# Run test
 FROM install AS test
 CMD yarn test
 
+# Build application
 FROM install AS build
-CMD yarn build
+RUN yarn build
 
-FROM build AS start
+# Run application
+FROM build
 CMD yarn start
