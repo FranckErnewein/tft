@@ -14,6 +14,8 @@ COPY tsconfig.json .
 COPY tsconfig.node.json .
 COPY vite.config.ts .
 COPY index.html .
+
+# COPY main.tsx .
 COPY src/ .
 
 # Run test
@@ -22,6 +24,8 @@ CMD yarn test
 
 # Build application
 FROM install AS build
+WORKDIR /app
+RUN sed -i -e 's/src\/main/\/main/g' ./index.html
 RUN yarn build
 
 # Run application
