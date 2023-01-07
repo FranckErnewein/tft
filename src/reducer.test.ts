@@ -34,7 +34,6 @@ describe("game", () => {
         onPlayerJoined
       );
       const newPlayerId = event.payload.player.id;
-      console.log(game.state, event);
       expect(game.state.players[newPlayerId].name).toBe("Franck");
     });
 
