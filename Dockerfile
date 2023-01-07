@@ -1,5 +1,5 @@
 # Install 
-FROM node:18 AS install
+FROM node:16.15 AS install
 
 RUN mkdir /app
 WORKDIR /app
@@ -11,6 +11,7 @@ RUN yarn
 
 COPY jest.config.js .
 COPY tsconfig.json .
+COPY tsconfig.node.json .
 COPY vite.config.ts .
 COPY index.html .
 COPY src/ .
