@@ -1,20 +1,13 @@
-import { useEffect } from "react";
-import io from "socket.io-client";
+import { useGame } from "./hooks";
 
 function App() {
-  useEffect(() => {
-    const socket = io("http://localhost:3000/");
-
-    socket.on("gameEvent", (event) => console.log(event));
-    return () => {
-      socket.close();
-    };
-  }, []);
+  const game = useGame();
 
   return (
     <div className="App">
       <h1>TFT app</h1>
       <hr />
+      <pre>{JSON.stringify(game, null, 2)}</pre>
     </div>
   );
 }

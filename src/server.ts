@@ -1,6 +1,7 @@
 import path from "path";
 import http from "http";
 import bodyParser from "body-parser";
+import cors from "cors";
 import { ValidateFunction } from "ajv/dist/jtd";
 import { Server } from "socket.io";
 import express, { Express, Request, Response } from "express";
@@ -21,11 +22,9 @@ const io = new Server(server, { cors: { origin: "*" } });
 const port = 3000;
 const game = new StateMachine();
 
+app.use(cors());
 app.use(express.static(path.join(__dirname, "../dist")));
 app.use(bodyParser.json());
-app.get("/", (_: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
 
 export const routeCommand = <
   E extends GameEvent,
@@ -50,6 +49,10 @@ export const routeCommand = <
 
 routeCommand<GameStarted>(startGame);
 routeCommand<PlayerJoined, PlayerJoinOptions>(playerJoin, playerJoinValidator);
+
+app.get("/state", (_, response: Response) => {
+  response.json(game.state);
+});
 
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
