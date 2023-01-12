@@ -1,6 +1,6 @@
-import { AbstractEvent } from "./events";
+import { GameEvent } from "./events";
 import { AbstractOptions, Command } from "./commands";
-import { Reducer } from "./reducer";
+import reducer, { Reducer } from "./reducer";
 
 export interface Game {
   id: string;
@@ -52,20 +52,19 @@ export const EMPTY_GAME: Game = {
 
 export class StateMachine {
   state: Game;
+  callbacks: Record<string, Reducer<GameEvent>[]>;
 
   constructor() {
+    this.callbacks = {};
     this.state = EMPTY_GAME;
   }
 
-  execute<E extends AbstractEvent, O extends AbstractOptions = {}>(
+  execute<E extends GameEvent, O extends AbstractOptions = {}>(
     command: Command<E, O>,
-    options: O,
-    ...reducers: Reducer<E>[]
+    options: O
   ) {
     const event = command(this.state, options);
-    for (const reducer of reducers) {
-      this.state = reducer(this.state, event);
-    }
+    this.state = reducer(this.state, event);
     return event;
   }
 }

@@ -33,3 +33,5 @@ export interface PlayerJoined extends AbstractEvent {
     player: Player;
   };
 }
+
+export type GameEvent = GameStarted | PlayerJoined;

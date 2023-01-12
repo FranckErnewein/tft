@@ -1,4 +1,10 @@
-import { AbstractEvent, GameStarted, PlayerJoined } from "./events";
+import {
+  AbstractEvent,
+  EventType,
+  GameEvent,
+  GameStarted,
+  PlayerJoined,
+} from "./events";
 import { Game, EMPTY_GAME } from "./state";
 
 export interface Reducer<E extends AbstractEvent> {
@@ -23,3 +29,14 @@ export const onPlayerJoined: Reducer<PlayerJoined> = (state, event): Game => {
     },
   };
 };
+
+export default function reducer(state: Game, event: GameEvent): Game {
+  switch (event.type) {
+    case EventType.GAME_STARTED:
+      return onGameStarted(state, event);
+    case EventType.PLAYER_JOINED:
+      return onPlayerJoined(state, event);
+    default:
+      return state;
+  }
+}
