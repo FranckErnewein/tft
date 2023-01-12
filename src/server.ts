@@ -1,6 +1,8 @@
 import path from "path";
+import http from "http";
 import bodyParser from "body-parser";
 import { ValidateFunction } from "ajv/dist/jtd";
+import { Server } from "socket.io";
 import express, { Express, Request, Response } from "express";
 import { StateMachine } from "./state";
 import {
@@ -14,6 +16,8 @@ import {
 import { GameEvent, PlayerJoined, GameStarted } from "./events";
 
 const app: Express = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
 const port = 3000;
 const game = new StateMachine();
 
@@ -39,6 +43,7 @@ export const routeCommand = <
     }
     const options = request.body;
     const event = game.execute<E, O>(command, options);
+    io.emit("gameEvent", event);
     response.json(event);
   });
 };
@@ -46,6 +51,6 @@ export const routeCommand = <
 routeCommand<GameStarted>(startGame);
 routeCommand<PlayerJoined, PlayerJoinOptions>(playerJoin, playerJoinValidator);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
