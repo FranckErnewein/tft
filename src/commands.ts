@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import Ajv, { JTDDataType } from "ajv/dist/jtd";
 import { EventType, AbstractEvent, GameStarted, PlayerJoined } from "./events";
 import { Game } from "./state";
 import { GameError } from "./errors";
@@ -19,6 +20,10 @@ export interface Command<
   (state: Game, options: O, datetime?: string): E;
 }
 
+export type StartGameOptions = null;
+
+const ajv = new Ajv();
+
 export const startGame: Command<GameStarted> = (game) => {
   if (game.id) {
     throw new GameError("Game already started");
@@ -32,9 +37,15 @@ export const startGame: Command<GameStarted> = (game) => {
   };
 };
 
-export interface PlayerJoinOptions extends AbstractOptions {
-  playerName: string;
-}
+const PlayerOptionSchema = {
+  properties: {
+    playerName: { type: "string" },
+  },
+} as const;
+
+export type PlayerJoinOptions = JTDDataType<typeof PlayerOptionSchema>;
+export const playerJoinValidator =
+  ajv.compile<PlayerJoinOptions>(PlayerOptionSchema);
 
 export const playerJoin: Command<PlayerJoined, PlayerJoinOptions> = (
   game,
