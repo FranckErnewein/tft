@@ -20,7 +20,7 @@ export interface Command<
   (state: Game, options: O, datetime?: string): E;
 }
 
-export type StartGameOptions = null;
+export type StartGameOptions = {};
 
 const ajv = new Ajv();
 
