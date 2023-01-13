@@ -24,10 +24,7 @@ export type StartGameOptions = {};
 
 const ajv = new Ajv();
 
-export const startGame: Command<GameStarted> = (game) => {
-  if (game.id) {
-    throw new GameError("Game already started");
-  }
+export const startGame: Command<GameStarted> = () => {
   return {
     type: EventType.GAME_STARTED,
     datetime: new Date().toISOString(),

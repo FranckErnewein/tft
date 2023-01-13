@@ -16,14 +16,12 @@ const Admin: FC<Game> = (game) => {
     <div>
       <h2>Admin</h2>
       <hr />
-      {!game.id && (
-        <button
-          onClick={() => execStartGame.mutate({})}
-          disabled={execStartGame.isLoading}
-        >
-          start game
-        </button>
-      )}
+      <button
+        onClick={() => execStartGame.mutate({})}
+        disabled={execStartGame.isLoading}
+      >
+        {game.id ? "reset game" : "start game"}
+      </button>
       <hr />
       {game.id && (
         <div>

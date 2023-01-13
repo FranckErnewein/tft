@@ -12,10 +12,14 @@ describe("game", () => {
       expect(game.state.startedAt).not.toBeNull();
     });
 
-    it("should reject game creation because one already exist", () => {
+    it("should reset game", () => {
       const game = new StateMachine();
       game.execute<GameStarted>(startGame, {});
-      expect(() => game.execute(startGame, {})).toThrow(GameError);
+      game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
+        playerName: "Franck",
+      });
+      game.execute<GameStarted>(startGame, {});
+      expect(Object.keys(game.state.players).length).toBe(0);
     });
   });
 

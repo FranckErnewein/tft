@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import io from "socket.io-client";
 import reducer from "./reducer";
-import { EMPTY_GAME, Game, StateMachine } from "./state";
+import { EMPTY_GAME, Game } from "./state";
 import { Command, AbstractOptions } from "./commands";
 import { AbstractEvent } from "./events";
 
