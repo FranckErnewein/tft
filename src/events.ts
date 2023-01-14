@@ -1,4 +1,4 @@
-import { Player } from "./state";
+import { Player, Round } from "./state";
 
 export enum EventType {
   GAME_STARTED = "GAME_STARTED",
@@ -34,4 +34,11 @@ export interface PlayerJoined extends AbstractEvent {
   };
 }
 
-export type GameEvent = GameStarted | PlayerJoined;
+export interface RoundStarted extends AbstractEvent {
+  type: EventType.ROUND_STARTED;
+  payload: {
+    roundId: string;
+  };
+}
+
+export type GameEvent = GameStarted | PlayerJoined | RoundStarted;

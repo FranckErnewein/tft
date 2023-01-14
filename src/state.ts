@@ -24,7 +24,7 @@ export enum RoundResult {
 export interface Round {
   id: string;
   startedAt: string;
-  endedAt: string;
+  endedAt: string | null;
   status: RoundStatus;
   betEndTimer: number;
   result: RoundResult | null;

@@ -4,8 +4,9 @@ import {
   GameEvent,
   GameStarted,
   PlayerJoined,
+  RoundStarted,
 } from "./events";
-import { Game, EMPTY_GAME } from "./state";
+import { Game, EMPTY_GAME, Round, RoundStatus } from "./state";
 
 export interface Reducer<E extends AbstractEvent> {
   (state: Game, abstractEvent: E): Game;
@@ -30,12 +31,30 @@ export const onPlayerJoined: Reducer<PlayerJoined> = (state, event): Game => {
   };
 };
 
+export const onRoundStarted: Reducer<RoundStarted> = (state, event): Game => {
+  const newRound: Round = {
+    id: event.payload.roundId,
+    startedAt: event.datetime,
+    endedAt: null,
+    status: RoundStatus.BetTime,
+    betEndTimer: 5,
+    result: null,
+    bets: {},
+  };
+  return {
+    ...state,
+    rounds: [...state.rounds, newRound],
+  };
+};
+
 export default function reducer(state: Game, event: GameEvent): Game {
   switch (event.type) {
     case EventType.GAME_STARTED:
       return onGameStarted(state, event);
     case EventType.PLAYER_JOINED:
       return onPlayerJoined(state, event);
+    case EventType.ROUND_STARTED:
+      return onRoundStarted(state, event);
     default:
       return state;
   }

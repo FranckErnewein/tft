@@ -1,6 +1,12 @@
 import { StateMachine } from "./state";
-import { GameStarted, PlayerJoined } from "./events";
-import { startGame, playerJoin, PlayerJoinOptions } from "./commands";
+import { GameStarted, PlayerJoined, RoundStarted } from "./events";
+import {
+  startGame,
+  playerJoin,
+  PlayerJoinOptions,
+  startRound,
+  StartRoundOptions,
+} from "./commands";
 import { GameError } from "./errors";
 
 describe("game", () => {
@@ -45,6 +51,19 @@ describe("game", () => {
           playerName: "Franck",
         })
       ).toThrow(GameError);
+    });
+  });
+
+  describe("rounds", () => {
+    it("should start a new round", () => {
+      const game = new StateMachine();
+      game.execute<GameStarted>(startGame, {});
+      game.execute<RoundStarted, StartRoundOptions>(startRound, {});
+      expect(game.state.rounds.length).toBe(1);
+      expect(game.state.rounds[0]?.startedAt).toBeDefined();
+      expect(game.state.rounds[0]?.endedAt).toBeNull();
+      expect(game.state.rounds[0]?.id).toBeDefined();
+      expect(game.state.rounds[0]?.result).toBeNull();
     });
   });
 });
