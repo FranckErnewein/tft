@@ -1,6 +1,7 @@
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import { Game } from "../state";
 import { useCommand } from "../hooks";
+import { PlayerJoined } from "../events";
 import {
   startGame,
   StartGameOptions,
@@ -9,16 +10,20 @@ import {
 } from "../commands";
 
 const Admin: FC<Game> = (game) => {
-  const execStartGame = useCommand<StartGameOptions>(startGame);
-  const execPlayerJoin = useCommand<PlayerJoinOptions>(playerJoin);
+  const startGameMutation = useCommand<StartGameOptions>(startGame);
+  const playerJoinMutation = useCommand<PlayerJoinOptions, PlayerJoined>(
+    playerJoin
+  );
   const inputPlayerName = useRef<HTMLInputElement>(null);
+  console.log("render");
+  console.log("player join event", playerJoinMutation.data);
   return (
     <div>
       <h2>Admin</h2>
       <hr />
       <button
-        onClick={() => execStartGame.mutate({})}
-        disabled={execStartGame.isLoading}
+        onClick={() => startGameMutation.mutate({})}
+        disabled={startGameMutation.isLoading}
       >
         {game.id ? "reset game" : "start game"}
       </button>
@@ -28,12 +33,12 @@ const Admin: FC<Game> = (game) => {
           <button
             onClick={() => {
               if (inputPlayerName.current) {
-                execPlayerJoin.mutate({
+                playerJoinMutation.mutate({
                   playerName: inputPlayerName.current.value,
                 });
               }
             }}
-            disabled={execPlayerJoin.isLoading}
+            disabled={playerJoinMutation.isLoading}
           >
             add player
           </button>

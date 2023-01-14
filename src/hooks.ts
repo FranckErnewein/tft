@@ -37,17 +37,16 @@ export function useGame(): Game {
   return gameState;
 }
 
-export function useCommand<O extends AbstractOptions = {}>(
+export function useCommand<O extends AbstractOptions = {}, E = AbstractEvent>(
   command: Command<AbstractEvent, O>
 ) {
-  return useMutation((options: 0 | {}) => {
-    console.log(options);
+  return useMutation<E, unknown, O>((options) => {
     return fetch(`http://localhost:3000/commands/${command.name}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(options),
-    });
+    }).then((r) => r.json());
   });
 }
