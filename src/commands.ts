@@ -61,7 +61,7 @@ export const playerJoin: Command<PlayerJoined, PlayerJoinOptions> = (
       player: {
         id: uuid(),
         name: options.playerName,
-        balanceCents: 10,
+        balanceCents: 1000,
       },
     },
   };

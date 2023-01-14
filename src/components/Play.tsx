@@ -14,7 +14,7 @@ const Play: FC<Props> = ({ game }) => {
 
   return (
     <div>
-      {player.name} - {player.balanceCents}€
+      {player.name} - {player.balanceCents / 100}€
     </div>
   );
 };
