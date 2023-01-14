@@ -15,8 +15,6 @@ const Admin: FC<Game> = (game) => {
     playerJoin
   );
   const inputPlayerName = useRef<HTMLInputElement>(null);
-  console.log("render");
-  console.log("player join event", playerJoinMutation.data);
   return (
     <div>
       <h2>Admin</h2>
