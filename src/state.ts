@@ -7,18 +7,19 @@ export interface Game {
   startedAt: string | null;
   endedAt: string | null;
   players: Record<string, Player>;
-  rounds: Round[];
+  currentRound: Round | null;
+  pastRounds: Round[];
 }
 
 export enum RoundStatus {
-  BetTime = "BET_TIME",
-  Running = "RUNNING",
-  Over = "OVER",
+  BET_TIME = "BET_TIME",
+  RUNNING = "RUNNING",
+  OVER = "OVER",
 }
 
 export enum RoundResult {
-  Win = "WIN",
-  Lose = "LOSE",
+  WIN = "WIN",
+  LOSE = "LOSE",
 }
 
 export interface Round {
@@ -47,7 +48,8 @@ export const EMPTY_GAME: Game = {
   startedAt: null,
   endedAt: null,
   players: {},
-  rounds: [],
+  currentRound: null,
+  pastRounds: [],
 };
 
 export class StateMachine {

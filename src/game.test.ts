@@ -1,11 +1,18 @@
-import { StateMachine } from "./state";
-import { GameStarted, PlayerJoined, RoundStarted } from "./events";
+import { StateMachine, RoundStatus } from "./state";
+import {
+  GameStarted,
+  PlayerJoined,
+  RoundStarted,
+  BetTimeStarted,
+} from "./events";
 import {
   startGame,
   playerJoin,
   PlayerJoinOptions,
   startRound,
   StartRoundOptions,
+  startBet,
+  StartBetOptions,
 } from "./commands";
 import { GameError } from "./errors";
 
@@ -58,12 +65,30 @@ describe("game", () => {
     it("should start a new round", () => {
       const game = new StateMachine();
       game.execute<GameStarted>(startGame, {});
+      expect(game.state.currentRound).toBeNull();
       game.execute<RoundStarted, StartRoundOptions>(startRound, {});
-      expect(game.state.rounds.length).toBe(1);
-      expect(game.state.rounds[0]?.startedAt).toBeDefined();
-      expect(game.state.rounds[0]?.endedAt).toBeNull();
-      expect(game.state.rounds[0]?.id).toBeDefined();
-      expect(game.state.rounds[0]?.result).toBeNull();
+      expect(game.state.pastRounds.length).toBe(0);
+      expect(game.state.currentRound?.startedAt).toBeDefined();
+      expect(game.state.currentRound?.endedAt).toBeNull();
+      expect(game.state.currentRound?.id).toBeDefined();
+      expect(game.state.currentRound?.result).toBeNull();
+    });
+
+    it("should start bet time", () => {
+      const game = new StateMachine();
+      game.execute<GameStarted>(startGame, {});
+      game.execute<RoundStarted, StartRoundOptions>(startRound, {});
+      game.execute<BetTimeStarted, StartBetOptions>(startBet, {});
+      expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
+      expect(game.state.currentRound?.betEndTimer).toBe(5);
+    });
+
+    it("should not start bet time if round was not started before", () => {
+      const game = new StateMachine();
+      game.execute<GameStarted>(startGame, {});
+      expect(() =>
+        game.execute<BetTimeStarted, StartBetOptions>(startBet, {})
+      ).toThrow(GameError);
     });
   });
 });

@@ -6,6 +6,7 @@ import {
   GameStarted,
   PlayerJoined,
   RoundStarted,
+  BetTimeStarted,
 } from "./events";
 import { Game } from "./state";
 import { GameError } from "./errors";
@@ -85,5 +86,18 @@ export const startRound: Command<RoundStarted> = () => {
     payload: {
       roundId: uuid(),
     },
+  };
+};
+
+export type StartBetOptions = {};
+
+export const startBet: Command<BetTimeStarted> = (state) => {
+  if (!state.currentRound) {
+    throw new GameError("can not start bet, no current round");
+  }
+  return {
+    type: EventType.BET_TIME_STARTED,
+    datetime: timestamp(),
+    payload: {},
   };
 };

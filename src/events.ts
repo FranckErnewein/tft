@@ -41,4 +41,12 @@ export interface RoundStarted extends AbstractEvent {
   };
 }
 
-export type GameEvent = GameStarted | PlayerJoined | RoundStarted;
+export interface BetTimeStarted extends AbstractEvent {
+  type: EventType.BET_TIME_STARTED;
+}
+
+export type GameEvent =
+  | GameStarted
+  | PlayerJoined
+  | RoundStarted
+  | BetTimeStarted;

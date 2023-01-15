@@ -5,8 +5,10 @@ import {
   GameStarted,
   PlayerJoined,
   RoundStarted,
+  BetTimeStarted,
 } from "./events";
 import { Game, EMPTY_GAME, Round, RoundStatus } from "./state";
+import { GameError } from "./errors";
 
 export interface Reducer<E extends AbstractEvent> {
   (state: Game, abstractEvent: E): Game;
@@ -36,14 +38,27 @@ export const onRoundStarted: Reducer<RoundStarted> = (state, event): Game => {
     id: event.payload.roundId,
     startedAt: event.datetime,
     endedAt: null,
-    status: RoundStatus.BetTime,
+    status: RoundStatus.BET_TIME,
     betEndTimer: 5,
     result: null,
     bets: {},
   };
   return {
     ...state,
-    rounds: [...state.rounds, newRound],
+    currentRound: newRound,
+  };
+};
+
+export const onBetTimeStarted: Reducer<BetTimeStarted> = (state): Game => {
+  if (!state.currentRound) {
+    throw new GameError("can not start bet, no current round");
+  }
+  return {
+    ...state,
+    currentRound: {
+      ...state.currentRound,
+      status: RoundStatus.BET_TIME,
+    },
   };
 };
 
@@ -55,6 +70,8 @@ export default function reducer(state: Game, event: GameEvent): Game {
       return onPlayerJoined(state, event);
     case EventType.ROUND_STARTED:
       return onRoundStarted(state, event);
+    case EventType.BET_TIME_STARTED:
+      return onBetTimeStarted(state, event);
     default:
       return state;
   }
