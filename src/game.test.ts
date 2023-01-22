@@ -21,7 +21,7 @@ import { GameError } from "./errors";
 
 describe("game", () => {
   describe("game start", () => {
-    it("should init the game correcty", () => {
+    it("should init the game correctly", () => {
       const game = new StateMachine();
       game.execute<GameStarted>(startGame, {});
       expect(game.state.id).toBeDefined();
@@ -62,6 +62,8 @@ describe("game", () => {
         })
       ).toThrow(GameError);
     });
+
+    it.todo("should reject join if game did not start");
   });
 
   describe("rounds", () => {
