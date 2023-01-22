@@ -64,6 +64,7 @@ describe("game", () => {
     });
 
     it.todo("should reject join if game did not start");
+    it.todo("should reject player with empty name");
   });
 
   describe("rounds", () => {
