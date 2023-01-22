@@ -6,6 +6,7 @@ import {
   PlayerJoined,
   RoundStarted,
   BetTimeStarted,
+  PlayerBet,
 } from "./events";
 import { Game, EMPTY_GAME, Round, RoundStatus } from "./state";
 import { GameError } from "./errors";
@@ -62,6 +63,22 @@ export const onBetTimeStarted: Reducer<BetTimeStarted> = (state): Game => {
   };
 };
 
+export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
+  if (!state.currentRound) {
+    throw new GameError("you can not bet, no round active");
+  }
+  return {
+    ...state,
+    currentRound: {
+      ...state.currentRound,
+      bets: {
+        ...state.currentRound.bets,
+        [event.payload.playerId]: event.payload.bet,
+      },
+    },
+  };
+};
+
 export default function reducer(state: Game, event: GameEvent): Game {
   switch (event.type) {
     case EventType.GAME_STARTED:
@@ -72,6 +89,8 @@ export default function reducer(state: Game, event: GameEvent): Game {
       return onRoundStarted(state, event);
     case EventType.BET_TIME_STARTED:
       return onBetTimeStarted(state, event);
+    case EventType.PLAYER_BET:
+      return onPlayerBet(state, event);
     default:
       return state;
   }

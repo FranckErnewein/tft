@@ -7,8 +7,9 @@ import {
   PlayerJoined,
   RoundStarted,
   BetTimeStarted,
+  PlayerBet,
 } from "./events";
-import { Game } from "./state";
+import { Game, RoundResult } from "./state";
 import { GameError } from "./errors";
 
 export type PrimitiveCommandOptionsTypes =
@@ -19,6 +20,7 @@ export type PrimitiveCommandOptionsTypes =
   | boolean
   | boolean[];
 export type AbstractOptions = Record<string, PrimitiveCommandOptionsTypes>;
+// export type AbstractOptions = { [key: string]: PrimitiveCommandOptionsTypes };
 
 export interface Command<
   E extends AbstractEvent,
@@ -99,5 +101,32 @@ export const startBet: Command<BetTimeStarted> = (state) => {
     type: EventType.BET_TIME_STARTED,
     datetime: timestamp(),
     payload: {},
+  };
+};
+
+const PlayerBetOptionSchema = {
+  properties: {
+    amountCents: { type: "uint8" },
+    win: { type: "boolean" },
+    playerId: { type: "string" },
+  },
+} as const;
+
+export type PlayerBetOptions = JTDDataType<typeof PlayerBetOptionSchema>;
+export const playerBetValidator = ajv.compile<PlayerBetOptions>(
+  PlayerBetOptionSchema
+);
+
+export const playerBet: Command<PlayerBet, PlayerBetOptions> = (_, options) => {
+  return {
+    type: EventType.PLAYER_BET,
+    datetime: timestamp(),
+    payload: {
+      playerId: options.playerId,
+      bet: {
+        amountCents: options.amountCents,
+        expectedResult: options.win ? RoundResult.WIN : RoundResult.LOSE,
+      },
+    },
   };
 };

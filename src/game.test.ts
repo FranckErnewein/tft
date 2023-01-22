@@ -4,6 +4,7 @@ import {
   PlayerJoined,
   RoundStarted,
   BetTimeStarted,
+  PlayerBet,
 } from "./events";
 import {
   startGame,
@@ -13,6 +14,8 @@ import {
   StartRoundOptions,
   startBet,
   StartBetOptions,
+  playerBet,
+  PlayerBetOptions,
 } from "./commands";
 import { GameError } from "./errors";
 
@@ -89,6 +92,31 @@ describe("game", () => {
       expect(() =>
         game.execute<BetTimeStarted, StartBetOptions>(startBet, {})
       ).toThrow(GameError);
+    });
+
+    describe("bet", () => {
+      it("should bet", () => {
+        const game = new StateMachine();
+        game.execute<GameStarted>(startGame, {});
+        const {
+          payload: { player },
+        } = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
+          playerName: "Franck",
+        });
+        game.execute<RoundStarted, StartRoundOptions>(startRound, {});
+        game.execute<BetTimeStarted, StartBetOptions>(startBet, {});
+        game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+          amountCents: 500,
+          win: true,
+          playerId: player.id,
+        });
+        expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
+        expect(game.state.currentRound?.betEndTimer).toBe(5);
+      });
+
+      it.todo("should edit a bet");
+      it.todo("should reject bet because game is not in bet phase");
+      it.todo("should reject bet playerId was not found");
     });
   });
 });

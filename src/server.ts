@@ -13,8 +13,11 @@ import {
   playerJoin,
   playerJoinValidator,
   PlayerJoinOptions,
+  playerBet,
+  playerBetValidator,
+  PlayerBetOptions,
 } from "./commands";
-import { GameEvent, PlayerJoined, GameStarted } from "./events";
+import { GameEvent, PlayerJoined, GameStarted, PlayerBet } from "./events";
 
 const app: Express = express();
 const server = http.createServer(app);
@@ -49,6 +52,7 @@ export const routeCommand = <
 
 routeCommand<GameStarted>(startGame);
 routeCommand<PlayerJoined, PlayerJoinOptions>(playerJoin, playerJoinValidator);
+routeCommand<PlayerBet, PlayerBetOptions>(playerBet, playerBetValidator);
 
 app.get("/state", (_, response: Response) => {
   response.json(game.state);
