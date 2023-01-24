@@ -8,6 +8,7 @@ import {
   RoundStarted,
   BetTimeStarted,
   PlayerBet,
+  PlayerLeft,
 } from "./events";
 import { Game, RoundResult } from "./state";
 import { GameError } from "./errors";
@@ -46,15 +47,15 @@ export const startGame: Command<GameStarted> = () => {
   };
 };
 
-const PlayerOptionSchema = {
+const PlayerJoinSchema = {
   properties: {
     playerName: { type: "string" },
   },
 } as const;
 
-export type PlayerJoinOptions = JTDDataType<typeof PlayerOptionSchema>;
+export type PlayerJoinOptions = JTDDataType<typeof PlayerJoinSchema>;
 export const playerJoinValidator =
-  ajv.compile<PlayerJoinOptions>(PlayerOptionSchema);
+  ajv.compile<PlayerJoinOptions>(PlayerJoinSchema);
 
 export const playerJoin: Command<PlayerJoined, PlayerJoinOptions> = (
   game,
@@ -76,6 +77,30 @@ export const playerJoin: Command<PlayerJoined, PlayerJoinOptions> = (
         balanceCents: 1000,
       },
     },
+  };
+};
+
+const PlayerLeaveSchema = {
+  properties: {
+    playerId: { type: "string" },
+  },
+} as const;
+
+export type PlayerLeaveOptions = JTDDataType<typeof PlayerLeaveSchema>;
+export const playerLeaveValidator =
+  ajv.compile<PlayerLeaveOptions>(PlayerLeaveSchema);
+
+export const playerLeave: Command<PlayerLeft, PlayerLeaveOptions> = (
+  game,
+  options
+) => {
+  if (!game.players[options.playerId]) {
+    throw new GameError(`player ${options.playerId} does not exist`);
+  }
+  return {
+    type: EventType.PLAYER_LEFT,
+    datetime: timestamp(),
+    payload: { playerId: options.playerId },
   };
 };
 

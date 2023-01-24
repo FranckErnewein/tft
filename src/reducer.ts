@@ -4,6 +4,7 @@ import {
   GameEvent,
   GameStarted,
   PlayerJoined,
+  PlayerLeft,
   RoundStarted,
   BetTimeStarted,
   PlayerBet,
@@ -31,6 +32,14 @@ export const onPlayerJoined: Reducer<PlayerJoined> = (state, event): Game => {
       ...state.players,
       [player.id]: player,
     },
+  };
+};
+
+export const onPlayerLeft: Reducer<PlayerLeft> = (state, event): Game => {
+  const { [event.payload.playerId]: _, ...rest } = state.players;
+  return {
+    ...state,
+    players: rest,
   };
 };
 
@@ -85,6 +94,8 @@ export default function reducer(state: Game, event: GameEvent): Game {
       return onGameStarted(state, event);
     case EventType.PLAYER_JOINED:
       return onPlayerJoined(state, event);
+    case EventType.PLAYER_LEFT:
+      return onPlayerLeft(state, event);
     case EventType.ROUND_STARTED:
       return onRoundStarted(state, event);
     case EventType.BET_TIME_STARTED:

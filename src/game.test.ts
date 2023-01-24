@@ -2,6 +2,7 @@ import { StateMachine, RoundStatus } from "./state";
 import {
   GameStarted,
   PlayerJoined,
+  PlayerLeft,
   RoundStarted,
   BetTimeStarted,
   PlayerBet,
@@ -10,6 +11,8 @@ import {
   startGame,
   playerJoin,
   PlayerJoinOptions,
+  playerLeave,
+  PlayerLeaveOptions,
   startRound,
   StartRoundOptions,
   startBet,
@@ -61,6 +64,18 @@ describe("game", () => {
           playerName: "Franck",
         })
       ).toThrow(GameError);
+    });
+
+    it("should join and leave", () => {
+      const game = new StateMachine();
+      game.execute<GameStarted>(startGame, {});
+      const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
+        playerName: "Franck",
+      });
+      game.execute<PlayerLeft, PlayerLeaveOptions>(playerLeave, {
+        playerId: event.payload.player.id,
+      });
+      expect(Object.keys(game.state.players)).toHaveLength(0);
     });
 
     it.todo("should reject join if game did not start");

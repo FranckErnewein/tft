@@ -3,6 +3,7 @@ import { Player, Bet } from "./state";
 export enum EventType {
   GAME_STARTED = "GAME_STARTED",
   PLAYER_JOINED = "PLAYER_JOINED",
+  PLAYER_LEFT = "PLAYER_LEFT",
   ROUND_STARTED = "ROUND_STARTED",
   BET_TIME_STARTED = "BET_TIME_STARTED",
   BET_TIME_DECREASED = "BET_TIME_DECREASED",
@@ -34,6 +35,13 @@ export interface PlayerJoined extends AbstractEvent {
   };
 }
 
+export interface PlayerLeft extends AbstractEvent {
+  type: EventType.PLAYER_LEFT;
+  payload: {
+    playerId: string;
+  };
+}
+
 export interface RoundStarted extends AbstractEvent {
   type: EventType.ROUND_STARTED;
   payload: {
@@ -56,6 +64,7 @@ export interface PlayerBet extends AbstractEvent {
 export type GameEvent =
   | GameStarted
   | PlayerJoined
+  | PlayerLeft
   | RoundStarted
   | BetTimeStarted
   | PlayerBet;
