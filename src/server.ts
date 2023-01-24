@@ -5,6 +5,7 @@ import cors from "cors";
 import { ValidateFunction } from "ajv/dist/jtd";
 import { Server } from "socket.io";
 import express, { Express, Request, Response } from "express";
+import { GameError } from "./errors";
 import { StateMachine } from "./state";
 import {
   Command,
@@ -44,9 +45,18 @@ export const routeCommand = <
       return;
     }
     const options = request.body;
-    const event = game.execute<E, O>(command, options);
-    io.emit("gameEvent", event);
-    response.json(event);
+    try {
+      const event = game.execute<E, O>(command, options);
+      io.emit("gameEvent", event);
+      response.json(event);
+    } catch (error) {
+      if (error instanceof GameError) {
+        response.status(400);
+        response.json({ error: error });
+      } else {
+        throw error;
+      }
+    }
   });
 };
 
