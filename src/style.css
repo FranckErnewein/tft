@@ -20,6 +20,9 @@ button:hover, input:focus {
   border-color: #bbb;
   background: #eee;
 }
+button:disabled, input:disabled {
+  opacity: 0.4;
+}
 
 hr {
   background: #ccc;
