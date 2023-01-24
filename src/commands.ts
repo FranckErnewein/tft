@@ -32,7 +32,7 @@ export interface Command<
 const ajv = new Ajv();
 
 function timestamp(d = new Date()): string {
-  return d.toString();
+  return d.toISOString();
 }
 
 export type StartGameOptions = {};
@@ -64,7 +64,7 @@ export const playerJoin: Command<PlayerJoined, PlayerJoinOptions> = (
     .map((playerId) => game.players[playerId])
     .forEach((player) => {
       if (player && player.name === options.playerName)
-        throw new GameError("name already use");
+        throw new GameError("name already used");
     });
   return {
     type: EventType.PLAYER_JOINED,
