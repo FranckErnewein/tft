@@ -132,9 +132,11 @@ describe("game", () => {
         expect(game.state.currentRound?.betEndTimer).toBe(5);
       });
 
+      it.todo("should deduce amount from player's balance");
       it.todo("should edit a bet");
       it.todo("should reject bet because game is not in bet phase");
       it.todo("should reject bet playerId was not found");
+      it.todo("should reject bet amount is superior to player's balance");
     });
   });
 });
