@@ -1,36 +1,88 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Game } from "../state";
 import { useCommand } from "../hooks";
-import { PlayerLeft } from "../events";
-import { playerLeave, PlayerLeaveOptions } from "../commands";
+import { PlayerLeft, PlayerBet } from "../events";
+import {
+  playerLeave,
+  PlayerLeaveOptions,
+  playerBet,
+  PlayerBetOptions,
+} from "../commands";
 
 export interface Props {
   game: Game;
 }
 
 const Play: FC<Props> = ({ game }) => {
-  const playerLeaveMutation = useCommand<PlayerLeaveOptions, PlayerLeft>(
+  const { mutate: leave } = useCommand<PlayerLeaveOptions, PlayerLeft>(
     playerLeave
   );
+  const { mutate: bet } = useCommand<PlayerBetOptions, PlayerBet>(playerBet);
+  const [amountCents, setAmountCents] = useState<number>(10);
+  const [win, setWin] = useState<boolean>(true);
   const { playerId } = useParams();
   if (!playerId) return null;
   const player = game.players[playerId];
 
   return (
     <div>
-      <Link
-        to="/"
-        onClick={() => {
-          playerLeaveMutation.mutate({ playerId });
-        }}
-      >
-        Quit
-      </Link>
-      <hr />
       {player && (
         <div>
-          {player.name} - {player.balanceCents / 100}€
+          {player.name} - {(player.balanceCents - amountCents) / 100}€
+          <form
+            action=""
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (game.currentRound) bet({ amountCents, win, playerId });
+            }}
+          >
+            <input
+              type="range"
+              min="10"
+              max="1000"
+              step="10"
+              defaultValue={amountCents}
+              onChange={(e) =>
+                setAmountCents(parseInt(e.currentTarget.value, 10))
+              }
+            />
+            {amountCents / 100}€
+            <br />
+            <label>
+              <input
+                type="radio"
+                name="win-lose"
+                value="win"
+                onChange={() => setWin(true)}
+                defaultChecked
+              />
+              win
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="win-lose"
+                value="lose"
+                onChange={() => setWin(false)}
+              />
+              lose
+            </label>
+            <br />
+            <br />
+            <input
+              type="submit"
+              value="Bet"
+              disabled={game.currentRound === null}
+              title={
+                game.currentRound === null ? "wait for next round to bet" : ""
+              }
+            />
+          </form>
+          <hr />
+          <Link to="/" onClick={() => leave({ playerId })}>
+            Quit
+          </Link>
         </div>
       )}
     </div>
