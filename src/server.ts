@@ -17,6 +17,8 @@ import {
   playerLeave,
   playerLeaveValidator,
   PlayerLeaveOptions,
+  startRound,
+  StartRoundOptions,
   playerBet,
   playerBetValidator,
   PlayerBetOptions,
@@ -26,6 +28,7 @@ import {
   PlayerJoined,
   PlayerLeft,
   GameStarted,
+  RoundStarted,
   PlayerBet,
 } from "./events";
 
@@ -72,6 +75,7 @@ export const routeCommand = <
 routeCommand<GameStarted>(startGame);
 routeCommand<PlayerJoined, PlayerJoinOptions>(playerJoin, playerJoinValidator);
 routeCommand<PlayerLeft, PlayerLeaveOptions>(playerLeave, playerLeaveValidator);
+routeCommand<RoundStarted>(startRound);
 routeCommand<PlayerBet, PlayerBetOptions>(playerBet, playerBetValidator);
 
 app.get("/state", (_, response: Response) => {

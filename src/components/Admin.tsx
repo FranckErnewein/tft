@@ -1,18 +1,23 @@
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
 import { Game } from "../state";
 import { useCommand } from "../hooks";
-import { PlayerJoined } from "../events";
+import { PlayerJoined, RoundStarted } from "../events";
 import {
   startGame,
   StartGameOptions,
   playerJoin,
   PlayerJoinOptions,
+  startRound,
+  StartRoundOptions,
 } from "../commands";
 
 const Admin: FC<Game> = (game) => {
   const startGameMutation = useCommand<StartGameOptions>(startGame);
   const playerJoinMutation = useCommand<PlayerJoinOptions, PlayerJoined>(
     playerJoin
+  );
+  const startRoundMutation = useCommand<StartRoundOptions, RoundStarted>(
+    startRound
   );
   const inputPlayerName = useRef<HTMLInputElement>(null);
   return (
@@ -41,6 +46,15 @@ const Admin: FC<Game> = (game) => {
             add player
           </button>
           <input ref={inputPlayerName} />
+          <hr />
+          <button
+            onClick={() => {
+              startRoundMutation.mutate({});
+            }}
+            disabled={startRoundMutation.isLoading}
+          >
+            start a new round
+          </button>
         </div>
       )}
     </div>

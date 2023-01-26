@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Game } from "../state";
+import { Game, RoundResult } from "../state";
 import { useCommand } from "../hooks";
 import { PlayerLeft, PlayerBet } from "../events";
 import {
@@ -79,6 +79,20 @@ const Play: FC<Props> = ({ game }) => {
               }
             />
           </form>
+          <hr />
+          {game.currentRound &&
+            Object.keys(game.currentRound.bets).map((playerId) => {
+              const player = game.players[playerId];
+              const bet = game.currentRound?.bets[playerId];
+              if (!player || !bet) return null;
+              return (
+                <div>
+                  {player.name} :{" "}
+                  {bet.expectedResult === RoundResult.WIN ? "win" : "lose"} for{" "}
+                  {bet.amountCents / 100} €
+                </div>
+              );
+            })}
           <hr />
           <Link to="/" onClick={() => leave({ playerId })}>
             Quit

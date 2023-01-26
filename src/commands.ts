@@ -131,7 +131,7 @@ export const startBet: Command<BetTimeStarted> = (state) => {
 
 const PlayerBetOptionSchema = {
   properties: {
-    amountCents: { type: "uint8" },
+    amountCents: { type: "uint16" },
     win: { type: "boolean" },
     playerId: { type: "string" },
   },
