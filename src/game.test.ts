@@ -1,4 +1,4 @@
-import { StateMachine, RoundStatus } from "./state";
+import { StateMachine, RoundStatus, Game, Player } from "./state";
 import {
   GameStarted,
   PlayerJoined,
@@ -113,26 +113,32 @@ describe("game", () => {
     });
 
     describe("bet", () => {
-      it("should bet", () => {
-        const game = new StateMachine();
+      let game: StateMachine | null = null;
+      let player: Player | null = null;
+      beforeEach(() => {
+        game = new StateMachine();
         game.execute<GameStarted>(startGame, {});
-        const {
-          payload: { player },
-        } = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
-          playerName: "Franck",
-        });
+        const event = game.execute<PlayerJoined, PlayerJoinOptions>(
+          playerJoin,
+          {
+            playerName: "Franck",
+          }
+        );
+        player = event.payload.player;
         game.execute<RoundStarted, StartRoundOptions>(startRound, {});
         game.execute<BetTimeStarted, StartBetOptions>(startBet, {});
+      });
+      it("should bet: create a new bet and reduce player balance", () => {
+        if (!game || !player) throw "game not initialized";
         game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
-          amountCents: 500,
+          amountCents: 200,
           win: true,
           playerId: player.id,
         });
-        expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
-        expect(game.state.currentRound?.betEndTimer).toBe(5);
+        expect(game.state.currentRound?.bets[player.id].amountCents).toBe(200);
+        expect(game.state.players[player.id]?.balanceCents).toBe(800);
       });
 
-      it.todo("should deduce amount from player's balance");
       it.todo("should edit a bet");
       it.todo("should reject bet because game is not in bet phase");
       it.todo("should reject bet playerId was not found");

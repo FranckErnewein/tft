@@ -76,13 +76,22 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
   if (!state.currentRound) {
     throw new GameError("you can not bet, no round active");
   }
+  const { playerId, bet } = event.payload;
+  const player = state.players[playerId];
   return {
     ...state,
+    players: {
+      ...state.players,
+      [playerId]: {
+        ...player,
+        balanceCents: player.balanceCents - bet.amountCents,
+      },
+    },
     currentRound: {
       ...state.currentRound,
       bets: {
         ...state.currentRound.bets,
-        [event.payload.playerId]: event.payload.bet,
+        [playerId]: event.payload.bet,
       },
     },
   };
