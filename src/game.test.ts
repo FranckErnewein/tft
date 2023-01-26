@@ -1,4 +1,4 @@
-import { StateMachine, RoundStatus, Game, Player } from "./state";
+import { StateMachine, RoundStatus, Player } from "./state";
 import {
   GameStarted,
   PlayerJoined,
