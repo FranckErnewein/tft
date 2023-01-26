@@ -139,10 +139,20 @@ describe("game", () => {
         expect(game.state.players[player.id]?.balanceCents).toBe(800);
       });
 
+      it("should reject bet amount is superior to player's balance", () => {
+        expect(() => {
+          if (!game || !player) throw "game not initialized";
+          game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+            amountCents: 1200,
+            win: true,
+            playerId: player.id,
+          });
+        }).toThrow(GameError);
+      });
+
       it.todo("should edit a bet");
       it.todo("should reject bet because game is not in bet phase");
       it.todo("should reject bet playerId was not found");
-      it.todo("should reject bet amount is superior to player's balance");
     });
   });
 });

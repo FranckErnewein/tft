@@ -142,7 +142,15 @@ export const playerBetValidator = ajv.compile<PlayerBetOptions>(
   PlayerBetOptionSchema
 );
 
-export const playerBet: Command<PlayerBet, PlayerBetOptions> = (_, options) => {
+export const playerBet: Command<PlayerBet, PlayerBetOptions> = (
+  state,
+  options
+) => {
+  if (state.players[options.playerId]?.balanceCents < options.amountCents) {
+    throw new GameError(
+      `player has not enough money to bet ${options.amountCents}`
+    );
+  }
   return {
     type: EventType.PLAYER_BET,
     datetime: timestamp(),

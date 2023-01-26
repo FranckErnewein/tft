@@ -78,13 +78,14 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
   }
   const { playerId, bet } = event.payload;
   const player = state.players[playerId];
+  const newBalance = player.balanceCents - bet.amountCents;
   return {
     ...state,
     players: {
       ...state.players,
       [playerId]: {
         ...player,
-        balanceCents: player.balanceCents - bet.amountCents,
+        balanceCents: newBalance,
       },
     },
     currentRound: {
