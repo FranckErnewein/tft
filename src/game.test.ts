@@ -80,6 +80,7 @@ describe("game", () => {
 
     it.todo("should reject join if game did not start");
     it.todo("should reject player with empty name");
+    it.todo("should remove bet on current round when player leave");
   });
 
   describe("rounds", () => {
