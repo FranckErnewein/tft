@@ -11,7 +11,7 @@ const Schema = {
 } as const;
 
 export type Options = JTDDataType<typeof Schema>;
-export const playerLeaveValidator = ajv.compile<Options>(Schema);
+export const Validator = ajv.compile<Options>(Schema);
 
 export const command: Command<PlayerLeft, Options> = (game, options) => {
   if (!game.players[options.playerId]) {

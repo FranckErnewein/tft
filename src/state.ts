@@ -1,5 +1,5 @@
 import { GameEvent } from "./events";
-import { AbstractOptions, Command } from "./commands";
+import { AbstractOptions, Command } from "./commands/types";
 import reducer, { Reducer } from "./reducer";
 
 export interface Game {

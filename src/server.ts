@@ -7,22 +7,7 @@ import { Server } from "socket.io";
 import express, { Express, Request, Response } from "express";
 import { GameError } from "./errors";
 import { StateMachine } from "./state";
-import {
-  Command,
-  AbstractOptions,
-  startGame,
-  playerJoin,
-  playerJoinValidator,
-  PlayerJoinOptions,
-  playerLeave,
-  playerLeaveValidator,
-  PlayerLeaveOptions,
-  startRound,
-  StartRoundOptions,
-  playerBet,
-  playerBetValidator,
-  PlayerBetOptions,
-} from "./commands";
+import * as commands from "./commands/";
 import {
   GameEvent,
   PlayerJoined,
@@ -44,12 +29,13 @@ app.use(bodyParser.json());
 
 export const routeCommand = <
   E extends GameEvent,
-  O extends AbstractOptions = {}
+  O extends commands.types.AbstractOptions = {}
 >(
-  command: Command<E, O>,
+  name: string,
+  command: commands.types.Command<E, O>,
   validator?: ValidateFunction<O>
 ) => {
-  const route = `/commands/${command.name}`;
+  const route = `/commands/${name}`;
   app.post(route, (request: Request, response: Response) => {
     if (validator && !validator(request.body || {})) {
       response.status(400);
@@ -72,11 +58,23 @@ export const routeCommand = <
   });
 };
 
-routeCommand<GameStarted>(startGame);
-routeCommand<PlayerJoined, PlayerJoinOptions>(playerJoin, playerJoinValidator);
-routeCommand<PlayerLeft, PlayerLeaveOptions>(playerLeave, playerLeaveValidator);
-routeCommand<RoundStarted>(startRound);
-routeCommand<PlayerBet, PlayerBetOptions>(playerBet, playerBetValidator);
+routeCommand<GameStarted>("startGame", commands.startGame.command);
+routeCommand<PlayerJoined, commands.playerJoin.Options>(
+  "playerJoin",
+  commands.playerJoin.command,
+  commands.playerJoin.Validator
+);
+routeCommand<PlayerLeft, commands.playerLeave.Options>(
+  "playerLeave",
+  commands.playerLeave.command,
+  commands.playerLeave.Validator
+);
+routeCommand<RoundStarted>("startRound", commands.startRound.command);
+routeCommand<PlayerBet, commands.playerBet.Options>(
+  "playerBet",
+  commands.playerBet.command,
+  commands.playerBet.Validator
+);
 
 app.get("/state", (_, response: Response) => {
   response.json(game.state);

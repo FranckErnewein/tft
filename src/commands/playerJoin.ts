@@ -12,7 +12,7 @@ const Schema = {
 } as const;
 
 export type Options = JTDDataType<typeof Schema>;
-export const playerJoinValidator = ajv.compile<Options>(Schema);
+export const Validator = ajv.compile<Options>(Schema);
 
 export const command: Command<PlayerJoined, Options> = (game, options) => {
   Object.keys(game.players)

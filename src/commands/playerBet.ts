@@ -14,7 +14,7 @@ const Schema = {
 } as const;
 
 export type Options = JTDDataType<typeof Schema>;
-export const playerBetValidator = ajv.compile<Options>(Schema);
+export const Validator = ajv.compile<Options>(Schema);
 
 export const command: Command<PlayerBet, Options> = (state, options) => {
   if (state.players[options.playerId]?.balanceCents < options.amountCents) {
