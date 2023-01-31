@@ -2,9 +2,8 @@ import { Command } from "./types";
 import { EventType, BetTimeStarted } from "../events";
 import { GameError } from "../errors";
 import { timestamp } from "../utils";
-export type Options = {};
 
-export const command: Command<BetTimeStarted> = (state) => {
+const command: Command = (state): BetTimeStarted => {
   if (!state.currentRound) {
     throw new GameError("can not start bet, no current round");
   }
@@ -14,3 +13,5 @@ export const command: Command<BetTimeStarted> = (state) => {
     payload: {},
   };
 };
+
+export default command;

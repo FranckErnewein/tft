@@ -1,36 +1,29 @@
 import { StateMachine } from "../state";
-import { GameStarted, PlayerJoined } from "../events";
 import { GameError } from "../errors";
-import * as startGame from "./startGame";
-import * as playerJoin from "./playerJoin";
+import { PlayerJoined } from "../events";
+import startGame from "./startGame";
+import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
 
 describe("playerJoin", () => {
   let game = new StateMachine();
   beforeEach(() => {
     game = new StateMachine();
-    game.execute<GameStarted>(startGame.command, {});
+    game.execute(startGame, {});
   });
 
   it("should add new player", () => {
-    const event = game.execute<PlayerJoined, playerJoin.Options>(
-      playerJoin.command,
-      {
-        playerName: "Franck",
-      }
-    );
+    const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
+      playerName: "Franck",
+    });
     const newPlayerId = event.payload.player.id;
     expect(game.state.players[newPlayerId].name).toBe("Franck");
   });
 
   it("should fail to add 2nd player with same name", () => {
-    game.execute<PlayerJoined, playerJoin.Options>(playerJoin.command, {
-      playerName: "Franck",
-    });
-    expect(() =>
-      game.execute<PlayerJoined, playerJoin.Options>(playerJoin.command, {
-        playerName: "Franck",
-      })
-    ).toThrow(GameError);
+    game.execute(playerJoin, { playerName: "Franck" });
+    expect(() => game.execute(playerJoin, { playerName: "Franck" })).toThrow(
+      GameError
+    );
   });
 
   it.todo("should reject join if game did not start");

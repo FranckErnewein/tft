@@ -3,9 +3,7 @@ import { Command } from "./types";
 import { EventType, GameStarted } from "../events";
 import { timestamp } from "../utils";
 
-export type Options = {};
-
-export const command: Command<GameStarted> = () => {
+const command: Command = (): GameStarted => {
   return {
     type: EventType.GAME_STARTED,
     datetime: timestamp(),
@@ -14,3 +12,5 @@ export const command: Command<GameStarted> = () => {
     },
   };
 };
+
+export default command;

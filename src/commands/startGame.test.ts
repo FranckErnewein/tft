@@ -1,23 +1,23 @@
 import { StateMachine } from "../state";
-import { GameStarted, PlayerJoined } from "../events";
-import * as startGame from "./startGame";
-import * as playerJoin from "./playerJoin";
+import { PlayerJoined } from "../events";
+import startGame from "./startGame";
+import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
 
 describe("startGame", () => {
   it("should init the game correctly", () => {
     const game = new StateMachine();
-    game.execute<GameStarted>(startGame.command, {});
+    game.execute(startGame, {});
     expect(game.state.id).toBeDefined();
     expect(game.state.startedAt).not.toBeNull();
   });
 
   it("should reset game", () => {
     const game = new StateMachine();
-    game.execute<GameStarted>(startGame.command, {});
-    game.execute<PlayerJoined, playerJoin.Options>(playerJoin.command, {
+    game.execute(startGame, {});
+    game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
       playerName: "Franck",
     });
-    game.execute<GameStarted>(startGame.command, {});
+    game.execute(startGame, {});
     expect(Object.keys(game.state.players).length).toBe(0);
   });
 });

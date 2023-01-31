@@ -3,9 +3,9 @@ import { RoundResult } from "../state";
 import { Command } from "./types";
 import { EventType, PlayerBet } from "../events";
 import { GameError } from "../errors";
-import { timestamp, ajv } from "../utils";
+import { timestamp, createValidator } from "../utils";
 
-const Schema = {
+const schema = {
   properties: {
     amountCents: { type: "uint16" },
     win: { type: "boolean" },
@@ -13,10 +13,11 @@ const Schema = {
   },
 } as const;
 
-export type Options = JTDDataType<typeof Schema>;
-export const Validator = ajv.compile<Options>(Schema);
+export type Options = JTDDataType<typeof schema>;
+export const validate = createValidator<Options>(schema);
 
-export const command: Command<PlayerBet, Options> = (state, options) => {
+const command: Command<Options> = (state, options: Options): PlayerBet => {
+  validate(options);
   if (state.players[options.playerId]?.balanceCents < options.amountCents) {
     throw new GameError(
       `player has not enough money to bet ${options.amountCents}`
@@ -34,3 +35,5 @@ export const command: Command<PlayerBet, Options> = (state, options) => {
     },
   };
 };
+
+export default command;

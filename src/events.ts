@@ -13,47 +13,45 @@ export enum EventType {
   GAME_OVER = "GAME_OVER",
 }
 
-type EventPayload = Record<string, unknown>;
-
-export interface AbstractEvent {
+interface BaseEvent {
   type: EventType;
   datetime: string;
-  payload: EventPayload;
+  payload: Record<string, unknown>;
 }
 
-export interface GameStarted extends AbstractEvent {
+export interface GameStarted extends BaseEvent {
   type: EventType.GAME_STARTED;
   payload: {
     newGameId: string;
   };
 }
 
-export interface PlayerJoined extends AbstractEvent {
+export interface PlayerJoined extends BaseEvent {
   type: EventType.PLAYER_JOINED;
   payload: {
     player: Player;
   };
 }
 
-export interface PlayerLeft extends AbstractEvent {
+export interface PlayerLeft extends BaseEvent {
   type: EventType.PLAYER_LEFT;
   payload: {
     playerId: string;
   };
 }
 
-export interface RoundStarted extends AbstractEvent {
+export interface RoundStarted extends BaseEvent {
   type: EventType.ROUND_STARTED;
   payload: {
     roundId: string;
   };
 }
 
-export interface BetTimeStarted extends AbstractEvent {
+export interface BetTimeStarted extends BaseEvent {
   type: EventType.BET_TIME_STARTED;
 }
 
-export interface PlayerBet extends AbstractEvent {
+export interface PlayerBet extends BaseEvent {
   type: EventType.PLAYER_BET;
   payload: {
     playerId: string;

@@ -1,5 +1,4 @@
 import {
-  AbstractEvent,
   EventType,
   GameEvent,
   GameStarted,
@@ -12,7 +11,7 @@ import {
 import { Game, EMPTY_GAME, Round, RoundStatus } from "./state";
 import { GameError } from "./errors";
 
-export interface Reducer<E extends AbstractEvent> {
+export interface Reducer<E extends GameEvent> {
   (state: Game, abstractEvent: E): Game;
 }
 

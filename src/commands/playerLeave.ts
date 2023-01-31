@@ -2,18 +2,19 @@ import { JTDDataType } from "ajv/dist/jtd";
 import { Command } from "./types";
 import { EventType, PlayerLeft } from "../events";
 import { GameError } from "../errors";
-import { timestamp, ajv } from "../utils";
+import { timestamp, createValidator } from "../utils";
 
-const Schema = {
+const schema = {
   properties: {
     playerId: { type: "string" },
   },
 } as const;
 
-export type Options = JTDDataType<typeof Schema>;
-export const Validator = ajv.compile<Options>(Schema);
+export type Options = JTDDataType<typeof schema>;
+export const validate = createValidator<Options>(schema);
 
-export const command: Command<PlayerLeft, Options> = (game, options) => {
+const command: Command<Options> = (game, options): PlayerLeft => {
+  validate(options);
   if (!game.players[options.playerId]) {
     throw new GameError(`player ${options.playerId} does not exist`);
   }
@@ -23,3 +24,5 @@ export const command: Command<PlayerLeft, Options> = (game, options) => {
     payload: { playerId: options.playerId },
   };
 };
+
+export default command;

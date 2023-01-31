@@ -1,14 +1,13 @@
 import { StateMachine } from "../state";
-import { GameStarted, RoundStarted } from "../events";
-import * as startGame from "./startGame";
-import * as startRound from "./startRound";
+import startGame from "./startGame";
+import startRound from "./startRound";
 
 describe("playerJoin", () => {
   it("should start a new round", () => {
     const game = new StateMachine();
-    game.execute<GameStarted>(startGame.command, {});
+    game.execute(startGame, {});
     expect(game.state.currentRound).toBeNull();
-    game.execute<RoundStarted, startRound.Options>(startRound.command, {});
+    game.execute(startRound, {});
     expect(game.state.pastRounds.length).toBe(0);
     expect(game.state.currentRound?.startedAt).toBeDefined();
     expect(game.state.currentRound?.endedAt).toBeNull();

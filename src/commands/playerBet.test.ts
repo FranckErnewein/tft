@@ -7,31 +7,28 @@ import {
   BetTimeStarted,
   PlayerBet,
 } from "../events";
-import * as startGame from "./startGame";
-import * as playerJoin from "./playerJoin";
-import * as startRound from "./startRound";
-import * as startBet from "./startBet";
-import * as playerBet from "./playerBet";
+import startGame from "./startGame";
+import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
+import startRound from "./startRound";
+import startBet from "./startBet";
+import playerBet, { Options as PlayerBetOptions } from "./playerBet";
 
 describe("playerBet", () => {
   let game = new StateMachine();
   let player: Player | null = null;
   beforeEach(() => {
     game = new StateMachine();
-    game.execute<GameStarted>(startGame.command, {});
-    const event = game.execute<PlayerJoined, playerJoin.Options>(
-      playerJoin.command,
-      {
-        playerName: "Franck",
-      }
-    );
+    game.execute<GameStarted>(startGame, {});
+    const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
+      playerName: "Franck",
+    });
     player = event.payload.player;
-    game.execute<RoundStarted, startRound.Options>(startRound.command, {});
-    game.execute<BetTimeStarted, startBet.Options>(startBet.command, {});
+    game.execute<RoundStarted>(startRound, {});
+    game.execute<BetTimeStarted>(startBet, {});
   });
   it("should bet: create a new bet and reduce player balance", () => {
     if (!player) throw "player not found";
-    game.execute<PlayerBet, playerBet.Options>(playerBet.command, {
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
       win: true,
       playerId: player.id,
@@ -43,7 +40,7 @@ describe("playerBet", () => {
   it("should reject bet amount is superior to player's balance", () => {
     expect(() => {
       if (!player) throw "player not found";
-      game.execute<PlayerBet, playerBet.Options>(playerBet.command, {
+      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
         amountCents: 1200,
         win: true,
         playerId: player.id,

@@ -3,18 +3,19 @@ import { JTDDataType } from "ajv/dist/jtd";
 import { Command } from "./types";
 import { EventType, PlayerJoined } from "../events";
 import { GameError } from "../errors";
-import { timestamp, ajv } from "../utils";
+import { timestamp, createValidator } from "../utils";
 
-const Schema = {
+const schema = {
   properties: {
     playerName: { type: "string" },
   },
 } as const;
 
-export type Options = JTDDataType<typeof Schema>;
-export const Validator = ajv.compile<Options>(Schema);
+export type Options = JTDDataType<typeof schema>;
+const validate = createValidator<Options>(schema);
 
-export const command: Command<PlayerJoined, Options> = (game, options) => {
+const command: Command<Options> = (game, options): PlayerJoined => {
+  validate(options);
   Object.keys(game.players)
     .map((playerId) => game.players[playerId])
     .forEach((player) => {
@@ -33,3 +34,5 @@ export const command: Command<PlayerJoined, Options> = (game, options) => {
     },
   };
 };
+
+export default command;
