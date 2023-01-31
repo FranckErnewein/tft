@@ -1,6 +1,6 @@
 import { GameEvent } from "./events";
-import { AbstractOptions, Command } from "./commands";
-import reducer, { Reducer } from "./reducer";
+import { Command, DefaultOption } from "./commands/types";
+import reducer from "./reducer";
 
 export interface Game {
   id: string;
@@ -54,18 +54,16 @@ export const EMPTY_GAME: Game = {
 
 export class StateMachine {
   state: Game;
-  callbacks: Record<string, Reducer<GameEvent>[]>;
 
   constructor() {
-    this.callbacks = {};
     this.state = EMPTY_GAME;
   }
 
-  execute<E extends GameEvent, O extends AbstractOptions = {}>(
-    command: Command<E, O>,
-    options: O
-  ) {
-    const event = command(this.state, options);
+  execute<
+    E extends GameEvent = GameEvent,
+    O extends DefaultOption = DefaultOption
+  >(command: Command<O>, options: O): E {
+    const event = command(this.state, options) as E;
     this.state = reducer(this.state, event);
     return event;
   }

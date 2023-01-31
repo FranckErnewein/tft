@@ -1,0 +1,39 @@
+import { JTDDataType } from "ajv/dist/jtd";
+import { RoundResult } from "../state";
+import { Command } from "./types";
+import { EventType, PlayerBet } from "../events";
+import { GameError } from "../errors";
+import { timestamp, createValidator } from "../utils";
+
+const schema = {
+  properties: {
+    amountCents: { type: "uint16" },
+    win: { type: "boolean" },
+    playerId: { type: "string" },
+  },
+} as const;
+
+export type Options = JTDDataType<typeof schema>;
+export const validate = createValidator<Options>(schema);
+
+const command: Command<Options> = (state, options: Options): PlayerBet => {
+  validate(options);
+  if (state.players[options.playerId]?.balanceCents < options.amountCents) {
+    throw new GameError(
+      `player has not enough money to bet ${options.amountCents}`
+    );
+  }
+  return {
+    type: EventType.PLAYER_BET,
+    datetime: timestamp(),
+    payload: {
+      playerId: options.playerId,
+      bet: {
+        amountCents: options.amountCents,
+        expectedResult: options.win ? RoundResult.WIN : RoundResult.LOSE,
+      },
+    },
+  };
+};
+
+export default command;
