@@ -1,4 +1,4 @@
-import { StateMachine, Player } from "../state";
+import { StateMachine, Player, RoundResult } from "../state";
 import { GameError } from "../errors";
 import {
   GameStarted,
@@ -34,6 +34,9 @@ describe("playerBet", () => {
       playerId: player.id,
     });
     expect(game.state.currentRound?.bets[player.id].amountCents).toBe(200);
+    expect(game.state.currentRound?.bets[player.id].expectedResult).toBe(
+      RoundResult.WIN
+    );
     expect(game.state.players[player.id]?.balanceCents).toBe(800);
   });
 
@@ -48,7 +51,24 @@ describe("playerBet", () => {
     }).toThrow(GameError);
   });
 
-  it.todo("should edit a bet");
+  it("should edit a bet", () => {
+    if (!player) throw "player not found";
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 200,
+      win: true,
+      playerId: player.id,
+    });
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 400,
+      win: false,
+      playerId: player.id,
+    });
+    expect(game.state.currentRound?.bets[player.id].amountCents).toBe(400);
+    expect(game.state.currentRound?.bets[player.id].expectedResult).toBe(
+      RoundResult.LOSE
+    );
+  });
+
   it.todo("should reject bet because game is not in bet phase");
   it.todo("should reject bet playerId was not found");
 });
