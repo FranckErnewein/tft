@@ -1,5 +1,6 @@
 import { StateMachine, Player, RoundResult } from "../state";
 import { GameError } from "../errors";
+import { DEFAULT_PLAYER_BALANCE } from "../constants";
 import {
   GameStarted,
   PlayerJoined,
@@ -65,6 +66,9 @@ describe("playerBet", () => {
     expect(game.state.currentRound?.bets[player.id].amountCents).toBe(400);
     expect(game.state.currentRound?.bets[player.id].expectedResult).toBe(
       RoundResult.LOSE
+    );
+    expect(game.state.players[player.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE - 400
     );
   });
 

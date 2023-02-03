@@ -63,7 +63,9 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
   if (!state.currentRound) throw new StateError("currentRound must exist");
   const { playerId, bet } = event.payload;
   const player = state.players[playerId];
-  const newBalance = player.balanceCents - bet.amountCents;
+  const existingBetAmount = state.currentRound?.bets[playerId]?.amountCents;
+  const newBalance =
+    player.balanceCents - bet.amountCents + (existingBetAmount || 0);
   return {
     ...state,
     players: {
