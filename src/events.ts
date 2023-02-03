@@ -59,10 +59,15 @@ export interface PlayerBet extends BaseEvent {
   };
 }
 
+export interface RoundOver extends BaseEvent {
+  type: EventType.ROUND_OVER;
+}
+
 export type GameEvent =
   | GameStarted
   | PlayerJoined
   | PlayerLeft
   | RoundStarted
   | BetTimeStarted
-  | PlayerBet;
+  | PlayerBet
+  | RoundOver;
