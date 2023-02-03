@@ -50,7 +50,7 @@ describe("endRound", () => {
     if (!p1) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      win: true,
+      forecast: RoundResult.WIN,
       playerId: p1.id,
     });
     game.execute(endRound, { roundResult: RoundResult.WIN });
@@ -63,12 +63,12 @@ describe("endRound", () => {
     if (!p1 || !p2) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      win: true,
+      forecast: RoundResult.WIN,
       playerId: p1.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 300,
-      win: false,
+      forecast: RoundResult.LOSE,
       playerId: p2.id,
     });
     game.execute(endRound, { roundResult: RoundResult.WIN });

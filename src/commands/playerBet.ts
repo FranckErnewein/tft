@@ -8,7 +8,7 @@ import { timestamp, createValidator } from "../utils";
 const schema = {
   properties: {
     amountCents: { type: "uint16" },
-    win: { type: "boolean" },
+    forecast: { enum: [RoundResult.WIN, RoundResult.LOSE] },
     playerId: { type: "string" },
   },
 } as const;
@@ -39,7 +39,7 @@ const command: Command<Options> = (state, options: Options): PlayerBet => {
       playerId: options.playerId,
       bet: {
         amountCents: options.amountCents,
-        expectedResult: options.win ? RoundResult.WIN : RoundResult.LOSE,
+        expectedResult: options.forecast,
       },
     },
   };

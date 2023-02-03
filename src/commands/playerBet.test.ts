@@ -32,7 +32,7 @@ describe("playerBet", () => {
     if (!player) throw "player not found";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      win: true,
+      forecast: RoundResult.WIN,
       playerId: player.id,
     });
     expect(game.state.currentRound?.bets[player.id].amountCents).toBe(200);
@@ -47,7 +47,7 @@ describe("playerBet", () => {
       if (!player) throw "player not found";
       game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
         amountCents: 1200,
-        win: true,
+        forecast: RoundResult.WIN,
         playerId: player.id,
       });
     }).toThrow(GameError);
@@ -57,12 +57,12 @@ describe("playerBet", () => {
     if (!player) throw "player not found";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      win: true,
+      forecast: RoundResult.WIN,
       playerId: player.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 400,
-      win: false,
+      forecast: RoundResult.LOSE,
       playerId: player.id,
     });
     expect(game.state.currentRound?.bets[player.id].amountCents).toBe(400);
@@ -82,7 +82,7 @@ describe("playerBet", () => {
       if (!player) throw "player not found";
       game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
         amountCents: 200,
-        win: true,
+        forecast: RoundResult.WIN,
         playerId: player.id,
       });
     };
@@ -99,7 +99,7 @@ describe("playerBet", () => {
       if (!player) throw "player not found";
       game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
         amountCents: 200,
-        win: true,
+        forecast: RoundResult.WIN,
         playerId: player.id,
       });
     };
