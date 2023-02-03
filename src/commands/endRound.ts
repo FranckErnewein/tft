@@ -1,15 +1,24 @@
-import { v4 as uuid } from "uuid";
+import { JTDDataType } from "ajv/dist/jtd";
 import { Command } from "./types";
+import { RoundResult } from "../state";
 import { EventType, RoundOver } from "../events";
-import { timestamp } from "../utils";
+import { timestamp, createValidator } from "../utils";
 
-const command: Command = (): RoundOver => {
+const schema = {
+  properties: {
+    roundResult: { enum: [RoundResult.WIN, RoundResult.LOSE] },
+  },
+} as const;
+
+export type Options = JTDDataType<typeof schema>;
+const validate = createValidator<Options>(schema);
+
+const command: Command<Options> = (game, options): RoundOver => {
+  validate(options);
   return {
     type: EventType.ROUND_OVER,
     datetime: timestamp(),
-    payload: {
-      roundId: uuid(),
-    },
+    payload: { roundResult: options.roundResult },
   };
 };
 

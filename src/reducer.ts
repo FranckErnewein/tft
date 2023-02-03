@@ -9,7 +9,7 @@ import {
   PlayerBet,
   RoundOver,
 } from "./events";
-import { Game, EMPTY_GAME, Round, RoundStatus } from "./state";
+import { Game, EMPTY_GAME, Round, Bet, RoundStatus } from "./state";
 import { GameError, StateError } from "./errors";
 
 export interface Reducer<E extends GameEvent> {
@@ -99,6 +99,10 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
 export const onRoundOver: Reducer<RoundOver> = (state, event): Game => {
   const { currentRound } = state;
   if (!currentRound) throw new StateError("no current round");
+  const totalAmountBet: number = Object.values(currentRound.bets).reduce(
+    (memo: number, bet: Bet) => bet.amountCents + memo,
+    0
+  );
   return {
     ...state,
     currentRound: null,
