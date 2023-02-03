@@ -27,7 +27,12 @@ const playerBet: Command<Options> = (state, options: Options): PlayerBet => {
   if (!state.players[options.playerId]) {
     throw new GameError(`player not found`);
   }
-  if (state.players[options.playerId].balanceCents < options.amountCents) {
+  const existingBetAmount =
+    state.currentRound?.bets[options.playerId]?.amountCents || 0;
+  if (
+    state.players[options.playerId].balanceCents + existingBetAmount <
+    options.amountCents
+  ) {
     throw new GameError(
       `player has not enough money to bet ${options.amountCents}`
     );

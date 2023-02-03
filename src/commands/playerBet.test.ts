@@ -54,7 +54,7 @@ describe("playerBet", () => {
   it("should edit a bet", () => {
     if (!player) throw "player not found";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
-      amountCents: 200,
+      amountCents: 800,
       forecast: RoundResult.WIN,
       playerId: player.id,
     });
