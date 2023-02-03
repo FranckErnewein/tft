@@ -13,6 +13,7 @@ import playerJoin from "./commands/playerJoin";
 import playerLeave from "./commands/playerLeave";
 import startBet from "./commands/startBet";
 import playerBet from "./commands/playerBet";
+import endRound from "./commands/endRound";
 
 const app: Express = express();
 const server = http.createServer(app);
@@ -49,6 +50,7 @@ routeCommand("playerLeave", playerLeave);
 routeCommand("startRound", startRound);
 routeCommand("startBet", startBet);
 routeCommand("playerBet", playerBet);
+routeCommand("endRound", endRound);
 
 app.get("/state", (_, response: Response) => {
   response.json(game.state);
