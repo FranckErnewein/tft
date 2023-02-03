@@ -1,8 +1,12 @@
-import { FC, useRef } from "react";
+import { FC, useState, ChangeEvent } from "react";
 import { Navigate } from "react-router-dom";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { useCommand } from "../hooks";
 import { PlayerJoined } from "../events";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import playerJoin, {
   Options as PlayerJoinOptions,
 } from "../commands/playerJoin";
@@ -11,7 +15,7 @@ const JoinGame: FC = () => {
   const playerJoinMutation = useCommand<PlayerJoinOptions, PlayerJoined>(
     playerJoin
   );
-  const inputPlayerName = useRef<HTMLInputElement>(null);
+  const [playerName, setPlayerName] = useState<string>("");
 
   const playerId = playerJoinMutation.data?.payload.player.id;
   if (playerId) {
@@ -19,23 +23,23 @@ const JoinGame: FC = () => {
   }
 
   return (
-    <form
-      action=""
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (
-          inputPlayerName.current &&
-          inputPlayerName.current.value.length > 1
-        ) {
-          playerJoinMutation.mutate({
-            playerName: inputPlayerName.current?.value,
-          });
+    <Box textAlign="center">
+      <TextField
+        label="Your name"
+        variant="outlined"
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          setPlayerName(e.target.value)
         }
-      }}
-    >
-      <input type="text" ref={inputPlayerName} />
-      <input type="submit" value="join game" />
-    </form>
+      />
+      <br />
+      <br />
+      <Button
+        variant="contained"
+        onClick={() => playerJoinMutation.mutate({ playerName })}
+      >
+        Join party
+      </Button>
+    </Box>
   );
 };
 
