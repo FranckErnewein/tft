@@ -34,7 +34,7 @@ const Bar = styled.div<Bet>`
   text-align: ${(props) => (win(props) ? "right" : "left")};
   width: ${(props) => ((props.amountCents / 1000) * 100) / 2}%;
   ${(props) => (win(props) ? "left" : "right")}: 50%;
-  background-color: ${(props) => (win(props) ? "red" : "blue")};
+  background-color: ${(props) => (win(props) ? "blue" : "purple")};
 `;
 
 const AvatarContent = styled.div`
@@ -69,11 +69,19 @@ const Bets: FC<Props> = ({ game }) => {
   return (
     <Content>
       <VerticalLine />
-      <Box textAlign="center">
-        <Typography variant="h3">
-          <span style={{ color: "blue" }}>{totalLose / 100}€</span>{" "}
-          <span style={{ color: "red" }}>{totalWin / 100}€</span>
-        </Typography>
+      <Box>
+        <Grid container>
+          <Grid item xs={6} textAlign="left">
+            <Typography variant="h3" color="secondary">
+              {totalLose / 100}€
+            </Typography>
+          </Grid>
+          <Grid item xs={6} textAlign="right">
+            <Typography variant="h3" color="primary">
+              {totalWin / 100}€
+            </Typography>
+          </Grid>
+        </Grid>
       </Box>
       {game.currentRound &&
         Object.values(game.players).map((player: Player) => {

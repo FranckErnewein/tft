@@ -30,7 +30,8 @@ const Play: FC<Props> = ({ game }) => {
     forecast: sliderValues[0] > 0 ? RoundResult.WIN : RoundResult.LOSE,
     playerId,
   };
-  console.log(betOptions);
+  const color =
+    betOptions.forecast === RoundResult.WIN ? "primary" : "secondary";
 
   return (
     <div>
@@ -40,6 +41,7 @@ const Play: FC<Props> = ({ game }) => {
             <Slider
               valueLabelDisplay="on"
               value={sliderValues}
+              color={color}
               onChange={(_, v: number | number[], a: number) => {
                 if (typeof v !== "number")
                   setSliderValues(a === 0 ? [v[0], 0] : [v[1], 0]);
@@ -54,6 +56,7 @@ const Play: FC<Props> = ({ game }) => {
             />
             <Button
               variant="contained"
+              color={color}
               disabled={betOptions.amountCents === 0}
               onClick={() => bet(betOptions)}
             >
