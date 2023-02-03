@@ -7,7 +7,6 @@ import {
   RoundStarted,
   BetTimeStarted,
   PlayerBet,
-  RoundOver,
 } from "../events";
 import startGame from "./startGame";
 import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
@@ -44,6 +43,7 @@ describe("endRound", () => {
     game.execute(endRound, { roundResult: RoundResult.WIN });
     expect(game.state.currentRound).toBeNull();
     expect(game.state.pastRounds).toHaveLength(1);
+    expect(game.state.pastRounds[0]?.endedAt).not.toBeNull();
   });
 
   it("should just retrieve money when only one player bet", () => {

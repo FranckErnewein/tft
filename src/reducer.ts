@@ -132,6 +132,8 @@ export const onRoundOver: Reducer<RoundOver> = (state, event): Game => {
     {}
   );
 
+  currentRound.endedAt = event.datetime;
+
   return {
     ...state,
     players: {
