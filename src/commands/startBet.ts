@@ -3,7 +3,7 @@ import { EventType, BetTimeStarted } from "../events";
 import { GameError } from "../errors";
 import { timestamp } from "../utils";
 
-const command: Command = (state): BetTimeStarted => {
+const startBet: Command = (state): BetTimeStarted => {
   if (!state.currentRound) {
     throw new GameError("can not start bet, no current round");
   }
@@ -14,4 +14,4 @@ const command: Command = (state): BetTimeStarted => {
   };
 };
 
-export default command;
+export default startBet;

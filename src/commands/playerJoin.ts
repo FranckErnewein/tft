@@ -14,7 +14,7 @@ const schema = {
 export type Options = JTDDataType<typeof schema>;
 const validate = createValidator<Options>(schema);
 
-const command: Command<Options> = (game, options): PlayerJoined => {
+const playerJoin: Command<Options> = (game, options): PlayerJoined => {
   validate(options);
   Object.keys(game.players)
     .map((playerId) => game.players[playerId])
@@ -35,4 +35,4 @@ const command: Command<Options> = (game, options): PlayerJoined => {
   };
 };
 
-export default command;
+export default playerJoin;

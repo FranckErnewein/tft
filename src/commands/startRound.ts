@@ -3,7 +3,7 @@ import { Command } from "./types";
 import { EventType, RoundStarted } from "../events";
 import { timestamp } from "../utils";
 
-const command: Command = (): RoundStarted => {
+const startRound: Command = (): RoundStarted => {
   return {
     type: EventType.ROUND_STARTED,
     datetime: timestamp(),
@@ -13,4 +13,4 @@ const command: Command = (): RoundStarted => {
   };
 };
 
-export default command;
+export default startRound;

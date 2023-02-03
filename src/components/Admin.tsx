@@ -1,24 +1,19 @@
 import { FC, useRef } from "react";
 import { Game } from "../state";
 import { useCommand } from "../hooks";
-import { PlayerJoined, RoundStarted } from "../events";
-import {
-  startGame,
-  StartGameOptions,
-  playerJoin,
-  PlayerJoinOptions,
-  startRound,
-  StartRoundOptions,
-} from "../commands";
+import { PlayerJoined } from "../events";
+import startGame from "../commands/startGame";
+import playerJoin, {
+  Options as PlayerJoinOptions,
+} from "../commands/playerJoin";
+import startRound from "../commands/startRound";
 
 const Admin: FC<Game> = (game) => {
-  const startGameMutation = useCommand<StartGameOptions>(startGame);
+  const startGameMutation = useCommand(startGame);
   const playerJoinMutation = useCommand<PlayerJoinOptions, PlayerJoined>(
     playerJoin
   );
-  const startRoundMutation = useCommand<StartRoundOptions, RoundStarted>(
-    startRound
-  );
+  const startRoundMutation = useCommand(startRound);
   const inputPlayerName = useRef<HTMLInputElement>(null);
   return (
     <div>

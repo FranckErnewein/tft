@@ -3,8 +3,8 @@ import { useQuery, useMutation } from "react-query";
 import io from "socket.io-client";
 import reducer from "./reducer";
 import { EMPTY_GAME, Game } from "./state";
-import { Command, AbstractOptions } from "./commands";
-import { AbstractEvent } from "./events";
+import { Command, DefaultOption } from "./commands/types";
+import { GameEvent } from "./events";
 
 export function useGame(): Game {
   const [gameState, setGameState] = useState<Game>(EMPTY_GAME);
@@ -37,8 +37,8 @@ export function useGame(): Game {
   return gameState;
 }
 
-export function useCommand<O extends AbstractOptions = {}, E = AbstractEvent>(
-  command: Command<AbstractEvent, O>
+export function useCommand<O extends DefaultOption = {}, E = GameEvent>(
+  command: Command<O>
 ) {
   return useMutation<E, unknown, O>((options) => {
     return fetch(`http://localhost:3000/commands/${command.name}`, {

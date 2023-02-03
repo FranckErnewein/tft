@@ -3,7 +3,9 @@ import { Navigate } from "react-router-dom";
 
 import { useCommand } from "../hooks";
 import { PlayerJoined } from "../events";
-import { playerJoin, PlayerJoinOptions } from "../commands";
+import playerJoin, {
+  Options as PlayerJoinOptions,
+} from "../commands/playerJoin";
 
 const JoinGame: FC = () => {
   const playerJoinMutation = useCommand<PlayerJoinOptions, PlayerJoined>(

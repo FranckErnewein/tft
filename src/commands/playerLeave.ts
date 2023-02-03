@@ -13,7 +13,7 @@ const schema = {
 export type Options = JTDDataType<typeof schema>;
 export const validate = createValidator<Options>(schema);
 
-const command: Command<Options> = (game, options): PlayerLeft => {
+const playerLeave: Command<Options> = (game, options): PlayerLeft => {
   validate(options);
   if (!game.players[options.playerId]) {
     throw new GameError(`player ${options.playerId} does not exist`);
@@ -25,4 +25,4 @@ const command: Command<Options> = (game, options): PlayerLeft => {
   };
 };
 
-export default command;
+export default playerLeave;

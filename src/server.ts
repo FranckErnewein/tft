@@ -25,8 +25,8 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "../dist")));
 app.use(bodyParser.json());
 
-export const routeCommand = (name: string, command: Command<any>) => {
-  const route = `/commands/${name}`;
+export const routeCommand = (command: Command<any>) => {
+  const route = `/commands/${command.name}`;
   app.post(route, (request: Request, response: Response) => {
     const options = request.body;
     try {
@@ -44,13 +44,13 @@ export const routeCommand = (name: string, command: Command<any>) => {
   });
 };
 
-routeCommand("startGame", startGame);
-routeCommand("playerJoin", playerJoin);
-routeCommand("playerLeave", playerLeave);
-routeCommand("startRound", startRound);
-routeCommand("startBet", startBet);
-routeCommand("playerBet", playerBet);
-routeCommand("endRound", endRound);
+routeCommand(startGame);
+routeCommand(playerJoin);
+routeCommand(playerLeave);
+routeCommand(startRound);
+routeCommand(startBet);
+routeCommand(playerBet);
+routeCommand(endRound);
 
 app.get("/state", (_, response: Response) => {
   response.json(game.state);

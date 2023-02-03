@@ -16,7 +16,7 @@ const schema = {
 export type Options = JTDDataType<typeof schema>;
 export const validate = createValidator<Options>(schema);
 
-const command: Command<Options> = (state, options: Options): PlayerBet => {
+const playerBet: Command<Options> = (state, options: Options): PlayerBet => {
   validate(options);
   if (
     !state.currentRound ||
@@ -45,4 +45,4 @@ const command: Command<Options> = (state, options: Options): PlayerBet => {
   };
 };
 
-export default command;
+export default playerBet;

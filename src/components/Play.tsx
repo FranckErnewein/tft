@@ -1,14 +1,10 @@
 import { FC, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Game } from "../state";
+import { Game, RoundResult } from "../state";
 import { useCommand } from "../hooks";
 import { PlayerLeft, PlayerBet } from "../events";
-import {
-  playerLeave,
-  PlayerLeaveOptions,
-  playerBet,
-  PlayerBetOptions,
-} from "../commands";
+import * as playerLeave from "../commands/playerLeave";
+import * as playerBet from "../commands/playerBet";
 import Bets from "./Bets";
 
 export interface Props {
@@ -16,10 +12,10 @@ export interface Props {
 }
 
 const Play: FC<Props> = ({ game }) => {
-  const { mutate: leave } = useCommand<PlayerLeaveOptions, PlayerLeft>(
+  const { mutate: leave } = useCommand<playerLeave.Options, PlayerLeft>(
     playerLeave
   );
-  const { mutate: bet } = useCommand<PlayerBetOptions, PlayerBet>(playerBet);
+  const { mutate: bet } = useCommand<playerBet.Options, PlayerBet>(playerBet);
   const [amountCents, setAmountCents] = useState<number>(10);
   const [win, setWin] = useState<boolean>(true);
   const { playerId } = useParams();
@@ -35,7 +31,12 @@ const Play: FC<Props> = ({ game }) => {
             action=""
             onSubmit={(e) => {
               e.preventDefault();
-              if (game.currentRound) bet({ amountCents, win, playerId });
+              if (game.currentRound)
+                bet({
+                  amountCents,
+                  forecast: win ? RoundResult.WIN : RoundResult.LOSE,
+                  playerId,
+                });
             }}
           >
             <input
