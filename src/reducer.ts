@@ -9,7 +9,7 @@ import {
   PlayerBet,
 } from "./events";
 import { Game, EMPTY_GAME, Round, RoundStatus } from "./state";
-import { GameError } from "./errors";
+import { GameError, StateError } from "./errors";
 
 export interface Reducer<E extends GameEvent> {
   (state: Game, abstractEvent: E): Game;
@@ -72,9 +72,7 @@ export const onBetTimeStarted: Reducer<BetTimeStarted> = (state): Game => {
 };
 
 export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
-  if (!state.currentRound) {
-    throw new GameError("you can not bet, no round active");
-  }
+  if (!state.currentRound) throw new StateError("currentRound must exist");
   const { playerId, bet } = event.payload;
   const player = state.players[playerId];
   const newBalance = player.balanceCents - bet.amountCents;
@@ -90,7 +88,7 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
     currentRound: {
       ...state.currentRound,
       bets: {
-        ...state.currentRound.bets,
+        ...state.currentRound?.bets,
         [playerId]: event.payload.bet,
       },
     },

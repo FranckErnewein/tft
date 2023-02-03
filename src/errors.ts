@@ -33,3 +33,10 @@ export class CommandOptionError extends JSONableError {
     };
   }
 }
+
+export class StateError extends JSONableError {
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, StateError.prototype);
+  }
+}

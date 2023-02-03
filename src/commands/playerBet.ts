@@ -1,5 +1,5 @@
 import { JTDDataType } from "ajv/dist/jtd";
-import { RoundResult } from "../state";
+import { RoundResult, RoundStatus } from "../state";
 import { Command } from "./types";
 import { EventType, PlayerBet } from "../events";
 import { GameError } from "../errors";
@@ -18,6 +18,12 @@ export const validate = createValidator<Options>(schema);
 
 const command: Command<Options> = (state, options: Options): PlayerBet => {
   validate(options);
+  if (
+    !state.currentRound ||
+    state.currentRound.status !== RoundStatus.BET_TIME
+  ) {
+    throw new GameError("you can not bet yet");
+  }
   if (state.players[options.playerId]?.balanceCents < options.amountCents) {
     throw new GameError(
       `player has not enough money to bet ${options.amountCents}`

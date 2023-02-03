@@ -69,6 +69,23 @@ describe("playerBet", () => {
     );
   });
 
-  it.todo("should reject bet because game is not in bet phase");
+  it("should reject bet because game is not in bet phase", () => {
+    game.execute<GameStarted>(startGame, {}); //reset game
+    const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
+      playerName: "Franck",
+    });
+    player = event.payload.player;
+    //avoid startBet command
+    const t = () => {
+      if (!player) throw "player not found";
+      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+        amountCents: 200,
+        win: true,
+        playerId: player.id,
+      });
+    };
+    expect(t).toThrow(GameError);
+    expect(t).toThrow("you can not bet yet");
+  });
   it.todo("should reject bet playerId was not found");
 });
