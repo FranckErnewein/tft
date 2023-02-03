@@ -2,7 +2,6 @@ import { StateMachine, RoundStatus } from "../state";
 import { GameError } from "../errors";
 import startGame from "./startGame";
 import startRound from "./startRound";
-import startBet from "./startBet";
 import endBet from "./endBet";
 
 describe("startBet", () => {
@@ -14,7 +13,6 @@ describe("startBet", () => {
   it("should start end time", () => {
     const game = new StateMachine();
     game.execute(startRound, {});
-    game.execute(startBet, {});
     expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
     game.execute(endBet, {});
     expect(game.state.currentRound?.status).toBe(RoundStatus.RUNNING);

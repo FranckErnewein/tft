@@ -4,14 +4,12 @@ import {
   GameStarted,
   PlayerJoined,
   RoundStarted,
-  BetTimeStarted,
   PlayerBet,
   PlayerLeft,
 } from "../events";
 import startGame from "./startGame";
 import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
 import startRound from "./startRound";
-import startBet from "./startBet";
 import playerBet, { Options as PlayerBetOptions } from "./playerBet";
 import playerLeave, { Options as PlayerLeaveOptions } from "./playerLeave";
 
@@ -26,7 +24,6 @@ describe("playerBet", () => {
     });
     player = event.payload.player;
     game.execute<RoundStarted>(startRound, {});
-    game.execute<BetTimeStarted>(startBet, {});
   });
   it("should bet: create a new bet and reduce player balance", () => {
     if (!player) throw "player not found";

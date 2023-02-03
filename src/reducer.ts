@@ -5,7 +5,6 @@ import {
   PlayerJoined,
   PlayerLeft,
   RoundStarted,
-  BetTimeStarted,
   PlayerBet,
   BetTimeEnded,
   RoundOver,
@@ -57,19 +56,6 @@ export const onRoundStarted: Reducer<RoundStarted> = (state, event): Game => {
   return {
     ...state,
     currentRound: newRound,
-  };
-};
-
-export const onBetTimeStarted: Reducer<BetTimeStarted> = (state): Game => {
-  if (!state.currentRound) {
-    throw new GameError("can not start bet, no current round");
-  }
-  return {
-    ...state,
-    currentRound: {
-      ...state.currentRound,
-      status: RoundStatus.BET_TIME,
-    },
   };
 };
 
@@ -174,8 +160,6 @@ export default function reducer(state: Game, event: GameEvent): Game {
       return onPlayerLeft(state, event);
     case EventType.ROUND_STARTED:
       return onRoundStarted(state, event);
-    case EventType.BET_TIME_STARTED:
-      return onBetTimeStarted(state, event);
     case EventType.PLAYER_BET:
       return onPlayerBet(state, event);
     case EventType.BET_TIME_ENDED:
