@@ -146,8 +146,6 @@ export const onRoundOver: Reducer<RoundOver> = (state, event): Game => {
     {}
   );
 
-  currentRound.endedAt = event.datetime;
-
   return {
     ...state,
     players: {
@@ -155,7 +153,14 @@ export const onRoundOver: Reducer<RoundOver> = (state, event): Game => {
       ...winners,
     },
     currentRound: null,
-    pastRounds: [...state.pastRounds, currentRound],
+    pastRounds: [
+      ...state.pastRounds,
+      {
+        ...currentRound,
+        endedAt: event.datetime,
+        result: roundResult,
+      },
+    ],
   };
 };
 

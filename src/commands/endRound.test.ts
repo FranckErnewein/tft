@@ -44,6 +44,7 @@ describe("endRound", () => {
     expect(game.state.currentRound).toBeNull();
     expect(game.state.pastRounds).toHaveLength(1);
     expect(game.state.pastRounds[0]?.endedAt).not.toBeNull();
+    expect(game.state.pastRounds[0]?.result).toBe(RoundResult.WIN);
   });
 
   it("should just retrieve money when only one player bet", () => {
