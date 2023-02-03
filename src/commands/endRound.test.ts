@@ -46,7 +46,7 @@ describe("endRound", () => {
     expect(game.state.pastRounds).toHaveLength(1);
   });
 
-  it.skip("should just retrieve money when only one player bet", () => {
+  it("should just retrieve money when only one player bet", () => {
     if (!p1) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
@@ -59,7 +59,7 @@ describe("endRound", () => {
     );
   });
 
-  it.skip("should just increase money for the winner (2 players)", () => {
+  it("should just increase money for the winner (2 players)", () => {
     if (!p1 || !p2) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
@@ -72,8 +72,69 @@ describe("endRound", () => {
       playerId: p2.id,
     });
     game.execute(endRound, { roundResult: RoundResult.WIN });
+    expect(game.state.players[p1.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE + 300
+    );
     expect(game.state.players[p2.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE - 300
+    );
+  });
+
+  it("should increase money with for the winner (3 players)", () => {
+    if (!p1 || !p2 || !p3) throw "player is missing for test";
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 200,
+      forecast: RoundResult.WIN,
+      playerId: p1.id,
+    });
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 300,
+      forecast: RoundResult.LOSE,
+      playerId: p2.id,
+    });
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 400,
+      forecast: RoundResult.LOSE,
+      playerId: p3.id,
+    });
+    game.execute(endRound, { roundResult: RoundResult.WIN });
+    expect(game.state.players[p1.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE + 700
+    );
+    expect(game.state.players[p2.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE - 300
+    );
+    expect(game.state.players[p3.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE - 400
+    );
+  });
+
+  it("should increase money with odds the 2 winners (3 players)", () => {
+    if (!p1 || !p2 || !p3) throw "player is missing for test";
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 100,
+      forecast: RoundResult.WIN,
+      playerId: p1.id,
+    });
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 200,
+      forecast: RoundResult.WIN,
+      playerId: p2.id,
+    });
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 600,
+      forecast: RoundResult.LOSE,
+      playerId: p3.id,
+    });
+    game.execute(endRound, { roundResult: RoundResult.WIN });
+    expect(game.state.players[p1.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE + 200
+    );
+    expect(game.state.players[p2.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE + 400
+    );
+    expect(game.state.players[p3.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE - 600
     );
   });
 

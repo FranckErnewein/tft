@@ -97,21 +97,47 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
 };
 
 export const onRoundOver: Reducer<RoundOver> = (state, event): Game => {
-  const { currentRound } = state;
+  const { currentRound, players } = state;
+  const { roundResult } = event.payload;
   if (!currentRound) throw new StateError("no current round");
   const totalAmountBet: number = Object.values(currentRound.bets).reduce(
     (memo: number, bet: Bet) => bet.amountCents + memo,
     0
   );
-  const players: Record<string, Player> = {};
-  Object.values(state.players).forEach((player: Player) => {
-    players[player.id] = {
-      ...player,
-    };
-  });
+  const totalAmountBetByWinners: number = Object.values(
+    currentRound.bets
+  ).reduce(
+    (memo: number, bet: Bet) =>
+      (bet.expectedResult === roundResult ? bet.amountCents : 0) + memo,
+    0
+  );
+  const totalAmountBetByLosers = totalAmountBet - totalAmountBetByWinners;
+
+  const winners: Record<string, Player> = Object.keys(currentRound.bets).reduce(
+    (memo: Record<string, Player>, playerId: string) => {
+      const bet = currentRound.bets[playerId];
+      const player = players[playerId];
+      if (player && bet && bet.expectedResult === roundResult) {
+        const odds = bet.amountCents / totalAmountBetByWinners;
+        memo[playerId] = {
+          ...player,
+          balanceCents:
+            player.balanceCents +
+            bet.amountCents +
+            totalAmountBetByLosers * odds,
+        };
+      }
+      return memo;
+    },
+    {}
+  );
+
   return {
     ...state,
-    players,
+    players: {
+      ...players,
+      ...winners,
+    },
     currentRound: null,
     pastRounds: [...state.pastRounds, currentRound],
   };

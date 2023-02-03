@@ -13,7 +13,7 @@ const schema = {
 export type Options = JTDDataType<typeof schema>;
 const validate = createValidator<Options>(schema);
 
-const command: Command<Options> = (game, options): RoundOver => {
+const command: Command<Options> = (_, options): RoundOver => {
   validate(options);
   return {
     type: EventType.ROUND_OVER,
