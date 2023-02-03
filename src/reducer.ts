@@ -9,7 +9,7 @@ import {
   PlayerBet,
   RoundOver,
 } from "./events";
-import { Game, EMPTY_GAME, Round, Bet, RoundStatus } from "./state";
+import { Game, EMPTY_GAME, Player, Round, Bet, RoundStatus } from "./state";
 import { GameError, StateError } from "./errors";
 
 export interface Reducer<E extends GameEvent> {
@@ -103,8 +103,15 @@ export const onRoundOver: Reducer<RoundOver> = (state, event): Game => {
     (memo: number, bet: Bet) => bet.amountCents + memo,
     0
   );
+  const players: Record<string, Player> = {};
+  Object.values(state.players).forEach((player: Player) => {
+    players[player.id] = {
+      ...player,
+    };
+  });
   return {
     ...state,
+    players,
     currentRound: null,
     pastRounds: [...state.pastRounds, currentRound],
   };
