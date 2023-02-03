@@ -1,6 +1,5 @@
 import { FC, useState, ChangeEvent } from "react";
 import { Navigate } from "react-router-dom";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 import { useCommand } from "../hooks";
 import { PlayerJoined } from "../events";
