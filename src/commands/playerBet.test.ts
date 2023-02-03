@@ -6,12 +6,14 @@ import {
   RoundStarted,
   BetTimeStarted,
   PlayerBet,
+  PlayerLeft,
 } from "../events";
 import startGame from "./startGame";
 import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
 import startRound from "./startRound";
 import startBet from "./startBet";
 import playerBet, { Options as PlayerBetOptions } from "./playerBet";
+import playerLeave, { Options as PlayerLeaveOptions } from "./playerLeave";
 
 describe("playerBet", () => {
   let game = new StateMachine();
@@ -87,5 +89,21 @@ describe("playerBet", () => {
     expect(t).toThrow(GameError);
     expect(t).toThrow("you can not bet yet");
   });
-  it.todo("should reject bet playerId was not found");
+
+  it("should reject bet playerId was not found", () => {
+    if (!player) throw "player not found";
+    game.execute<PlayerLeft, PlayerLeaveOptions>(playerLeave, {
+      playerId: player.id,
+    });
+    const t = () => {
+      if (!player) throw "player not found";
+      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+        amountCents: 200,
+        win: true,
+        playerId: player.id,
+      });
+    };
+    expect(t).toThrow(GameError);
+    expect(t).toThrow("player not found");
+  });
 });
