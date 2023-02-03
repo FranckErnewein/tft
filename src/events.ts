@@ -1,4 +1,4 @@
-import { Player, Bet } from "./state";
+import { Player, Bet, RoundResult } from "./state";
 
 export enum EventType {
   GAME_STARTED = "GAME_STARTED",
@@ -61,6 +61,9 @@ export interface PlayerBet extends BaseEvent {
 
 export interface RoundOver extends BaseEvent {
   type: EventType.ROUND_OVER;
+  payload: {
+    roundResult: RoundResult;
+  };
 }
 
 export type GameEvent =
