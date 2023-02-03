@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import Slider from "@mui/material/Slider";
 import { Game, RoundResult } from "../state";
 import { useCommand } from "../hooks";
 import { PlayerLeft, PlayerBet } from "../events";
@@ -7,6 +8,7 @@ import playerLeave, {
   Options as PlayerLeaveOptions,
 } from "../commands/playerLeave";
 import playerBet, { Options as PlayerBetOptions } from "../commands/playerBet";
+import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import Bets from "./Bets";
 
 export interface Props {
@@ -19,6 +21,7 @@ const Play: FC<Props> = ({ game }) => {
   );
   const { mutate: bet } = useCommand<PlayerBetOptions, PlayerBet>(playerBet);
   const [amountCents, setAmountCents] = useState<number>(10);
+  const [sliderValues, setSliderValues] = useState<number[]>([0, 0]);
   const [win, setWin] = useState<boolean>(true);
   const { playerId } = useParams();
   if (!playerId) return null;
@@ -41,6 +44,21 @@ const Play: FC<Props> = ({ game }) => {
                 });
             }}
           >
+            <Slider
+              valueLabelDisplay="on"
+              value={sliderValues}
+              onChange={(_, v: number | number[], a: number) => {
+                if (typeof v !== "number")
+                  setSliderValues(a === 0 ? [v[0], 0] : [v[1], 0]);
+              }}
+              valueLabelFormat={(value: number) => {
+                if (value > 0) return `win for ${value / 100}€`;
+                if (value < 0) return `lose for ${-value / 100}€`;
+                return "0";
+              }}
+              min={-1000}
+              max={1000}
+            />
             <input
               type="range"
               min="10"
