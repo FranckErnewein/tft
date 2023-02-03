@@ -1,5 +1,9 @@
 import { useGame } from "./hooks";
 import { Routes, Route } from "react-router-dom";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
 import Admin from "./components/Admin";
 import JoinGame from "./components/JoinGame";
 import Play from "./components/Play";
@@ -9,20 +13,26 @@ function App() {
   const game = useGame();
 
   return (
-    <div className="App">
-      <h1>Team For Gamble</h1>
+    <Container className="App">
+      <AppBar>
+        <Typography variant="h5" component="h1" sx={{ flexGrow: 1, p: 1 }}>
+          Team For Gamble
+        </Typography>
+      </AppBar>
 
-      <Routes>
-        <Route path="/">
-          <Route index element={<JoinGame />} />
-          <Route path="admin" element={<Admin {...game} />} />
-          <Route path="player/:playerId" element={<Play game={game} />} />
-          <Route path="story">
-            <Route path="betting/:playerId" element={<Betting />} />
+      <Box mt={12}>
+        <Routes>
+          <Route path="/">
+            <Route index element={<JoinGame />} />
+            <Route path="admin" element={<Admin {...game} />} />
+            <Route path="player/:playerId" element={<Play game={game} />} />
+            <Route path="story">
+              <Route path="betting/:playerId" element={<Betting />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </div>
+        </Routes>
+      </Box>
+    </Container>
   );
 }
 

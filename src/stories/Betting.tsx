@@ -51,9 +51,21 @@ export default function Betting() {
       betEndTimer: 5,
       result: null,
       bets: {
+        b: {
+          amountCents: 130,
+          expectedResult: RoundResult.LOSE,
+        },
         c: {
-          amountCents: 20,
+          amountCents: 200,
           expectedResult: RoundResult.WIN,
+        },
+        d: {
+          amountCents: 550,
+          expectedResult: RoundResult.WIN,
+        },
+        f: {
+          amountCents: 50,
+          expectedResult: RoundResult.LOSE,
         },
       },
     },
