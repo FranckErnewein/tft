@@ -7,6 +7,7 @@ import {
   RoundStarted,
   BetTimeStarted,
   PlayerBet,
+  BetTimeEnded,
   RoundOver,
 } from "./events";
 import { Game, EMPTY_GAME, Player, Round, Bet, RoundStatus } from "./state";
@@ -96,6 +97,19 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
   };
 };
 
+export const onBetTimeEnded: Reducer<BetTimeEnded> = (state): Game => {
+  if (!state.currentRound) {
+    throw new GameError("can not end bet, no current round");
+  }
+  return {
+    ...state,
+    currentRound: {
+      ...state.currentRound,
+      status: RoundStatus.RUNNING,
+    },
+  };
+};
+
 export const onRoundOver: Reducer<RoundOver> = (state, event): Game => {
   const { currentRound, players } = state;
   const { roundResult } = event.payload;
@@ -159,6 +173,8 @@ export default function reducer(state: Game, event: GameEvent): Game {
       return onBetTimeStarted(state, event);
     case EventType.PLAYER_BET:
       return onPlayerBet(state, event);
+    case EventType.BET_TIME_ENDED:
+      return onBetTimeEnded(state, event);
     case EventType.ROUND_OVER:
       return onRoundOver(state, event);
     default:
