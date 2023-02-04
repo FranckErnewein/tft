@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, UseMutateFunction } from "react-query";
 import io from "socket.io-client";
 import reducer from "./reducer";
 import { EMPTY_GAME, Game } from "./state";
 import { Command, DefaultOption } from "./commands/types";
-import { GameEvent } from "./events";
+import { GameEvent, BaseEvent } from "./events";
+import { SerializedError } from "./errors";
 
 export function useGame(): Game {
   const [gameState, setGameState] = useState<Game>(EMPTY_GAME);
@@ -36,11 +37,26 @@ export function useGame(): Game {
   }, [gameLoaded]);
   return gameState;
 }
+export type CommandResponsePayload<E = GameEvent> =
+  | { type: "event"; event: E }
+  | { type: "error"; error: SerializedError };
 
-export function useCommand<O extends DefaultOption = {}, E = GameEvent>(
+export function useCommand<
+  O extends DefaultOption = {},
+  E extends BaseEvent = GameEvent
+>(
   command: Command<O>
-) {
-  return useMutation<E, unknown, O>((options) => {
+): {
+  data: E | null;
+  error: SerializedError | null;
+  isLoading: boolean;
+  mutate: UseMutateFunction<CommandResponsePayload<E>, unknown, O>;
+} {
+  const { data, isLoading, mutate } = useMutation<
+    CommandResponsePayload<E>,
+    unknown,
+    O
+  >((options) => {
     return fetch(`http://localhost:3000/commands/${command.name}`, {
       method: "POST",
       headers: {
@@ -49,4 +65,10 @@ export function useCommand<O extends DefaultOption = {}, E = GameEvent>(
       body: JSON.stringify(options),
     }).then((r) => r.json());
   });
+  return {
+    data: data?.type === "event" ? data.event : null,
+    error: data?.type === "error" ? data.error : null,
+    isLoading,
+    mutate,
+  };
 }

@@ -32,11 +32,11 @@ export const routeCommand = (command: Command<any>) => {
     try {
       const event = game.execute(command, options);
       io.emit("gameEvent", event);
-      response.json(event);
+      response.json({ type: "event", event: event });
     } catch (error) {
       if (error instanceof GameError || error instanceof CommandOptionError) {
         response.status(400);
-        response.json({ error: error });
+        response.json({ type: "error", error: error });
       } else {
         throw error;
       }

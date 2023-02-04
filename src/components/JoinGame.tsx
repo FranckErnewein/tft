@@ -1,22 +1,23 @@
 import { FC, useState, ChangeEvent } from "react";
 import { Navigate } from "react-router-dom";
 
-import { useCommand } from "../hooks";
 import { PlayerJoined } from "../events";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+
 import playerJoin, {
   Options as PlayerJoinOptions,
 } from "../commands/playerJoin";
+import createCommandButton from "./createCommandButton";
+
+const PlayerJoinButton = createCommandButton<PlayerJoinOptions, PlayerJoined>(
+  playerJoin
+);
 
 const JoinGame: FC = () => {
-  const playerJoinMutation = useCommand<PlayerJoinOptions, PlayerJoined>(
-    playerJoin
-  );
   const [playerName, setPlayerName] = useState<string>("");
+  const [playerId, setPlayerId] = useState<string | null>(null);
 
-  const playerId = playerJoinMutation.data?.payload.player.id;
   if (playerId) {
     return <Navigate to={`player/${playerId}`} />;
   }
@@ -32,12 +33,14 @@ const JoinGame: FC = () => {
       />
       <br />
       <br />
-      <Button
-        variant="contained"
-        onClick={() => playerJoinMutation.mutate({ playerName })}
+      <PlayerJoinButton
+        options={{ playerName }}
+        onSuccess={(event: PlayerJoined) => {
+          setPlayerId(event.payload.player.id);
+        }}
       >
         Join party
-      </Button>
+      </PlayerJoinButton>
     </Box>
   );
 };

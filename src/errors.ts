@@ -1,7 +1,12 @@
 import { DefinedError } from "ajv";
 
+export interface SerializedError {
+  message: string;
+  stack?: string[];
+}
+
 abstract class JSONableError extends Error {
-  toJSON() {
+  toJSON(): SerializedError {
     return {
       message: this.message,
       stack:

@@ -13,7 +13,7 @@ export enum EventType {
   GAME_OVER = "GAME_OVER",
 }
 
-interface BaseEvent {
+export interface BaseEvent {
   type: EventType;
   datetime: string;
   payload: Record<string, unknown>;
