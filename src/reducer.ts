@@ -86,7 +86,10 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
   };
 };
 
-export const onBetTimeDecreased: Reducer<BetTimeDecreased> = (state): Game => {
+export const onBetTimeDecreased: Reducer<BetTimeDecreased> = (
+  state,
+  event
+): Game => {
   if (!state.currentRound) {
     throw new GameError("can not end bet, no current round");
   }
@@ -94,7 +97,7 @@ export const onBetTimeDecreased: Reducer<BetTimeDecreased> = (state): Game => {
     ...state,
     currentRound: {
       ...state.currentRound,
-      status: RoundStatus.RUNNING,
+      betEndTimer: event.payload.restTime,
     },
   };
 };
@@ -107,6 +110,7 @@ export const onBetTimeEnded: Reducer<BetTimeEnded> = (state): Game => {
     ...state,
     currentRound: {
       ...state.currentRound,
+      betEndTimer: 0,
       status: RoundStatus.RUNNING,
     },
   };
@@ -178,6 +182,8 @@ export default function reducer(state: Game, event: GameEvent): Game {
       return onRoundStarted(state, event);
     case EventType.PLAYER_BET:
       return onPlayerBet(state, event);
+    case EventType.BET_TIME_DECREASED:
+      return onBetTimeDecreased(state, event);
     case EventType.BET_TIME_ENDED:
       return onBetTimeEnded(state, event);
     case EventType.ROUND_OVER:

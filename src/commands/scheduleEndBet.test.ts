@@ -1,5 +1,5 @@
 import { StateMachine, RoundStatus } from "../state";
-import { BetTimeDecreased, BetTimeEnded } from "../events";
+import { BetTimeDecreased, BetTimeEnded, EventType } from "../events";
 import startGame from "./startGame";
 import startRound from "./startRound";
 import scheduleEndBet, { Options as SEBOptions } from "./scheduleEndBet";
@@ -21,12 +21,11 @@ describe("scheduleEndBet", () => {
         interval: 10,
       },
       (event) => {
-        console.log("event", event);
-        console.log("status", game.state.currentRound?.status);
-        expect(event.payload.restTime).toBeGreaterThan(0);
-        // TODO implement restingTime on round in reducer
-        expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
-        expect(game.state.currentRound?.betEndTimer).not.toBeNull();
+        if (event.type === EventType.BET_TIME_DECREASED) {
+          expect(event.payload.restTime).toBeGreaterThan(0);
+          expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
+          expect(game.state.currentRound?.betEndTimer).not.toBeNull();
+        }
       },
       () => {
         expect(game.state.currentRound?.status).toBe(RoundStatus.RUNNING);
@@ -38,4 +37,7 @@ describe("scheduleEndBet", () => {
 
   it.todo("should not schedule end bet time if round was is not in bet mode");
   it.todo("should not allow to bet after end bet");
+  it.todo(
+    "should stop if somebody end manually before the end of schedule time "
+  );
 });
