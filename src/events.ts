@@ -84,5 +84,6 @@ export type GameEvent =
   | RoundStarted
   | BetTimeStarted
   | PlayerBet
+  | BetTimeDecreased
   | BetTimeEnded
   | RoundOver;

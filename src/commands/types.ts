@@ -25,7 +25,7 @@ export interface AsyncCommand<
     state: Game,
     options: O,
     emit: EmitFunction<E>,
-    done: () => void,
+    done?: () => void,
     datetime?: string
   ): AbortFunction | void;
 }

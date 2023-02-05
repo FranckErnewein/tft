@@ -1,5 +1,5 @@
 import { GameEvent } from "./events";
-import { Command, DefaultOption } from "./commands/types";
+import { Command, AsyncCommand, DefaultOption } from "./commands/types";
 import reducer from "./reducer";
 
 export interface Game {
@@ -59,12 +59,33 @@ export class StateMachine {
     this.state = EMPTY_GAME;
   }
 
+  emit(event: GameEvent) {
+    this.state = reducer(this.state, event);
+  }
+
   execute<E extends GameEvent = GameEvent, O extends DefaultOption = undefined>(
     command: Command<O>,
     options?: O
   ): E {
     const event = command(this.state, options as O) as E;
-    this.state = reducer(this.state, event);
+    this.emit(event);
     return event;
+  }
+
+  executeAsync<E extends GameEvent, O extends DefaultOption = undefined>(
+    command: AsyncCommand<O, E>,
+    options?: O,
+    onEmit?: (e: E) => void,
+    onDone?: () => void
+  ) {
+    command(
+      this.state,
+      options as O,
+      (e) => {
+        this.emit(e);
+        if (onEmit) onEmit(e);
+      },
+      onDone
+    );
   }
 }

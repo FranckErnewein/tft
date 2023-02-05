@@ -1,7 +1,7 @@
 import { JTDDataType } from "ajv/dist/jtd";
-import { AsyncCommand, EmitFunction } from "./types";
+import { AsyncCommand } from "./types";
 import { EventType, BetTimeDecreased, BetTimeEnded } from "../events";
-import { GameError } from "../errors";
+// import { GameError } from "../errors";
 import { timestamp, createValidator } from "../utils";
 
 const schema = {
@@ -22,10 +22,12 @@ function generateEvent(restTime: number): BetTimeDecreased {
   };
 }
 
-const scheduleBetTime: AsyncCommand<
-  Options,
-  BetTimeDecreased | BetTimeEnded
-> = (state, options: Options, emit, done) => {
+const scheduleEndBet: AsyncCommand<Options, BetTimeDecreased | BetTimeEnded> = (
+  _,
+  options: Options,
+  emit,
+  done
+) => {
   validate(options);
   const { restTime, interval } = options;
   emit(generateEvent(options.restTime));
@@ -45,7 +47,7 @@ const scheduleBetTime: AsyncCommand<
       datetime: timestamp(),
       payload: {},
     });
-    done();
+    if (done) done();
   }, restTime);
   return () => {
     clearTimeout(runningTimeout);
@@ -53,4 +55,4 @@ const scheduleBetTime: AsyncCommand<
   };
 };
 
-export default scheduleBetTime;
+export default scheduleEndBet;
