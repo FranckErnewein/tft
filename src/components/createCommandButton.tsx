@@ -6,31 +6,46 @@ import { BaseEvent, GameEvent } from "../events";
 import { useCommand, CommandResponsePayload } from "../hooks";
 import ErrorToaster from "./ErrorToaster";
 
+interface CommandOptionsProps<O, E> {
+  options?: O;
+  children?: ReactNode;
+  onSuccess?: (event: E) => void;
+  color?: "error" | "primary" | "secondary" | "success" | "info" | "warning";
+  variant?: "outlined" | "text" | "contained";
+}
+
 export default function createCommandButton<
   O extends DefaultOption = undefined,
   E extends BaseEvent = GameEvent
->(
-  command: Command<O>
-): FC<{ options?: O; children?: ReactNode; onSuccess?: (event: E) => void }> {
-  return function ({ options, onSuccess, children }) {
-    const mutation = useCommand<O, E>(command);
+>(command: Command<O>): FC<CommandOptionsProps<O, E>> {
+  const comp: FC<CommandOptionsProps<O, E>> = ({
+    options = {},
+    onSuccess,
+    children,
+    color,
+    variant = "contained",
+  }) => {
+    const { mutate, isLoading, error } = useCommand<O, E>(command);
+    const opt = options as O;
     return (
       <>
         <Button
-          variant="outlined"
+          variant={variant}
+          color={color}
           onClick={() =>
-            mutation.mutate(options, {
+            mutate(opt, {
               onSuccess: (json: CommandResponsePayload<E>) => {
                 if (json.type === "event" && onSuccess) onSuccess(json.event);
               },
             })
           }
-          disabled={mutation.isLoading}
+          disabled={isLoading}
         >
           {children}
         </Button>
-        <ErrorToaster error={mutation.error} />
+        <ErrorToaster error={error} />
       </>
     );
   };
+  return comp;
 }
