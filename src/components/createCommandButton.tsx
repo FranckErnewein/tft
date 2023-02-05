@@ -7,16 +7,17 @@ import { useCommand, CommandResponsePayload } from "../hooks";
 import ErrorToaster from "./ErrorToaster";
 
 export default function createCommandButton<
-  O extends DefaultOption,
+  O extends DefaultOption = undefined,
   E extends BaseEvent = GameEvent
 >(
   command: Command<O>
-): FC<{ options: O; children?: ReactNode; onSuccess?: (event: E) => void }> {
+): FC<{ options?: O; children?: ReactNode; onSuccess?: (event: E) => void }> {
   return function ({ options, onSuccess, children }) {
     const mutation = useCommand<O, E>(command);
     return (
       <>
         <Button
+          variant="outlined"
           onClick={() =>
             mutation.mutate(options, {
               onSuccess: (json: CommandResponsePayload<E>) => {
