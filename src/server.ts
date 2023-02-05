@@ -6,12 +6,13 @@ import { Server } from "socket.io";
 import express, { Express, Request, Response } from "express";
 import { GameError, CommandOptionError } from "./errors";
 import { StateMachine } from "./state";
-import { Command } from "./commands/types";
+import { Command, AsyncCommand } from "./commands/types";
 import startGame from "./commands/startGame";
 import startRound from "./commands/startRound";
 import playerJoin from "./commands/playerJoin";
 import playerLeave from "./commands/playerLeave";
 import playerBet from "./commands/playerBet";
+import scheduleEndBet from "./commands/scheduleEndBet";
 import endBet from "./commands/endBet";
 import endRound from "./commands/endRound";
 
@@ -44,11 +45,32 @@ export const routeCommand = (command: Command<any>) => {
   });
 };
 
+export const routeAsyncCommand = (command: AsyncCommand<any>) => {
+  const route = `/commands/${command.name}`;
+  app.post(route, (request: Request, response: Response) => {
+    const options = request.body;
+    try {
+      game.executeAsync(command, options, (event) => {
+        io.emit("gameEvent", event);
+      });
+      response.json({ type: "async" });
+    } catch (error) {
+      if (error instanceof GameError || error instanceof CommandOptionError) {
+        response.status(400);
+        response.json({ type: "error", error: error });
+      } else {
+        throw error;
+      }
+    }
+  });
+};
+
 routeCommand(startGame);
 routeCommand(playerJoin);
 routeCommand(playerLeave);
 routeCommand(startRound);
 routeCommand(playerBet);
+routeAsyncCommand(scheduleEndBet);
 routeCommand(endBet);
 routeCommand(endRound);
 

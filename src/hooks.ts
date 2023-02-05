@@ -3,7 +3,7 @@ import { useQuery, useMutation, UseMutateFunction } from "react-query";
 import io from "socket.io-client";
 import reducer from "./reducer";
 import { EMPTY_GAME, Game } from "./state";
-import { Command, DefaultOption } from "./commands/types";
+import { Command, AsyncCommand, DefaultOption } from "./commands/types";
 import { GameEvent, BaseEvent } from "./events";
 import { SerializedError } from "./errors";
 
@@ -39,13 +39,14 @@ export function useGame(): Game {
 }
 export type CommandResponsePayload<E = GameEvent> =
   | { type: "event"; event: E }
-  | { type: "error"; error: SerializedError };
+  | { type: "error"; error: SerializedError }
+  | { type: "async" };
 
 export function useCommand<
   O extends DefaultOption = {},
   E extends BaseEvent = GameEvent
 >(
-  command: Command<O>
+  command: Command<O> | AsyncCommand<O, E>
 ): {
   data: E | null;
   error: SerializedError | null;

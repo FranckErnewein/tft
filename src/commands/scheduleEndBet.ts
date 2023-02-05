@@ -7,7 +7,7 @@ import { timestamp, createValidator } from "../utils";
 const schema = {
   properties: {
     restTime: { type: "uint16" },
-    interval: { type: "uint8" },
+    interval: { type: "uint16" },
   },
 } as const;
 

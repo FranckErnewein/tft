@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import Button from "@mui/material/Button";
 
-import { DefaultOption, Command } from "../commands/types";
+import { DefaultOption, Command, AsyncCommand } from "../commands/types";
 import { BaseEvent, GameEvent } from "../events";
 import { useCommand, CommandResponsePayload } from "../hooks";
 import ErrorToaster from "./ErrorToaster";
@@ -12,18 +12,20 @@ interface CommandOptionsProps<O, E> {
   onSuccess?: (event: E) => void;
   color?: "error" | "primary" | "secondary" | "success" | "info" | "warning";
   variant?: "outlined" | "text" | "contained";
+  disabled?: boolean;
 }
 
 export default function createCommandButton<
   O extends DefaultOption = undefined,
   E extends BaseEvent = GameEvent
->(command: Command<O>): FC<CommandOptionsProps<O, E>> {
+>(command: Command<O> | AsyncCommand<O, E>): FC<CommandOptionsProps<O, E>> {
   const comp: FC<CommandOptionsProps<O, E>> = ({
     options = {},
     onSuccess,
     children,
     color,
     variant = "contained",
+    disabled = false,
   }) => {
     const { mutate, isLoading, error } = useCommand<O, E>(command);
     const opt = options as O;
@@ -39,7 +41,7 @@ export default function createCommandButton<
               },
             })
           }
-          disabled={isLoading}
+          disabled={isLoading || disabled}
         >
           {children}
         </Button>
