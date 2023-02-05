@@ -1,1 +1,2 @@
 - [ ] Cancel a bet
+- [ ] Order bet by amount (desc)

@@ -111,11 +111,17 @@ const Bets: FC<Props> = ({ game }) => {
       <Box>
         <Grid container>
           <Grid item xs={6} textAlign="left">
+            <Typography variant="overline" color="secondary">
+              Total for lose
+            </Typography>
             <Typography variant="h3" color="secondary">
               {totalLose / 100}€
             </Typography>
           </Grid>
           <Grid item xs={6} textAlign="right">
+            <Typography variant="overline" color="primary">
+              Total for win
+            </Typography>
             <Typography variant="h3" color="primary">
               {totalWin / 100}€
             </Typography>

@@ -3,7 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { Game, RoundResult } from "../state";
+import Typography from "@mui/material/Typography";
+import { Game, RoundResult, RoundStatus } from "../state";
 import { useCommand } from "../hooks";
 import { PlayerLeft, PlayerBet } from "../events";
 import playerLeave, {
@@ -32,12 +33,13 @@ const Play: FC<Props> = ({ game }) => {
   };
   const color =
     betOptions.forecast === RoundResult.WIN ? "primary" : "secondary";
+  const isBetTime = game.currentRound?.status === RoundStatus.BET_TIME;
 
   return (
     <div>
       {player && (
         <div>
-          <Box textAlign="center">
+          <Box textAlign="center" height="100px">
             <Slider
               valueLabelDisplay="on"
               value={sliderValues}
@@ -51,17 +53,27 @@ const Play: FC<Props> = ({ game }) => {
                 if (value < 0) return `lose for ${-value / 100}€`;
                 return "0";
               }}
+              disabled={!isBetTime}
               min={-1000}
+              step={5}
               max={1000}
             />
-            <Button
-              variant="contained"
-              color={color}
-              disabled={betOptions.amountCents === 0}
-              onClick={() => bet(betOptions)}
-            >
-              Bet
-            </Button>
+            {isBetTime && (
+              <Button
+                variant="contained"
+                color={color}
+                disabled={betOptions.amountCents === 0}
+                onClick={() => bet(betOptions)}
+              >
+                Bet
+              </Button>
+            )}
+            {!isBetTime && game.currentRound && (
+              <Typography variant="overline">Fighting now</Typography>
+            )}
+            {!isBetTime && !game.currentRound && (
+              <Typography variant="overline">Waiting for next round</Typography>
+            )}
           </Box>
           <Bets game={game} />
           <Link to="/" onClick={() => leave({ playerId })}>
