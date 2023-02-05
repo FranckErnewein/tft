@@ -7,7 +7,7 @@ import playerLeave, { Options as PlayerLeaveOptions } from "./playerLeave";
 describe("playerLeave", () => {
   it("should join and leave", () => {
     const game = new StateMachine();
-    game.execute(startGame, {});
+    game.execute(startGame);
     const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
       playerName: "Franck",
     });

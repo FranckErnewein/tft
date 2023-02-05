@@ -59,6 +59,13 @@ export interface PlayerBet extends BaseEvent {
   };
 }
 
+export interface BetTimeDecreased extends BaseEvent {
+  type: EventType.BET_TIME_DECREASED;
+  payload: {
+    restTime: number;
+  };
+}
+
 export interface BetTimeEnded extends BaseEvent {
   type: EventType.BET_TIME_ENDED;
 }

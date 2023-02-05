@@ -1,13 +1,7 @@
 import { StateMachine, Player, RoundResult } from "../state";
 import { DEFAULT_PLAYER_BALANCE } from "../constants";
 // import { GameError } from "../errors";
-import {
-  GameStarted,
-  PlayerJoined,
-  RoundStarted,
-  BetTimeStarted,
-  PlayerBet,
-} from "../events";
+import { GameStarted, PlayerJoined, RoundStarted, PlayerBet } from "../events";
 import startGame from "./startGame";
 import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
 import startRound from "./startRound";
@@ -21,7 +15,7 @@ describe("endRound", () => {
   let p3: Player | null = null;
   beforeEach(() => {
     game = new StateMachine();
-    game.execute<GameStarted>(startGame, {});
+    game.execute<GameStarted>(startGame);
     const e1 = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
       playerName: "P1",
     });
@@ -34,7 +28,7 @@ describe("endRound", () => {
       playerName: "P3",
     });
     p3 = e3.payload.player;
-    game.execute<RoundStarted>(startRound, {});
+    game.execute<RoundStarted>(startRound);
   });
 
   it("end round with no bet, just archive last round", () => {

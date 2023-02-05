@@ -8,7 +8,7 @@ describe("playerJoin", () => {
   let game = new StateMachine();
   beforeEach(() => {
     game = new StateMachine();
-    game.execute(startGame, {});
+    game.execute(startGame);
   });
 
   it("should add new player", () => {

@@ -19,12 +19,12 @@ describe("playerBet", () => {
   let player: Player | null = null;
   beforeEach(() => {
     game = new StateMachine();
-    game.execute<GameStarted>(startGame, {});
+    game.execute<GameStarted>(startGame);
     const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
       playerName: "Franck",
     });
     player = event.payload.player;
-    game.execute<RoundStarted>(startRound, {});
+    game.execute<RoundStarted>(startRound);
   });
   it("should bet: create a new bet and reduce player balance", () => {
     if (!player) throw "player not found";
@@ -73,7 +73,7 @@ describe("playerBet", () => {
   });
 
   it("should reject bet because game is not in bet phase", () => {
-    game.execute<GameStarted>(startGame, {}); //reset game
+    game.execute<GameStarted>(startGame); //reset game
     const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
       playerName: "Franck",
     });

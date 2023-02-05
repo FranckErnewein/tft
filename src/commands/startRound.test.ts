@@ -5,9 +5,9 @@ import startRound from "./startRound";
 describe("playerJoin", () => {
   it("should start a new round", () => {
     const game = new StateMachine();
-    game.execute(startGame, {});
+    game.execute(startGame);
     expect(game.state.currentRound).toBeNull();
-    game.execute(startRound, {});
+    game.execute(startRound);
     expect(game.state.pastRounds.length).toBe(0);
     expect(game.state.currentRound?.startedAt).toBeDefined();
     expect(game.state.currentRound?.endedAt).toBeNull();

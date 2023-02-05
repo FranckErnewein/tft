@@ -59,11 +59,11 @@ export class StateMachine {
     this.state = EMPTY_GAME;
   }
 
-  execute<
-    E extends GameEvent = GameEvent,
-    O extends DefaultOption = DefaultOption
-  >(command: Command<O>, options: O): E {
-    const event = command(this.state, options) as E;
+  execute<E extends GameEvent = GameEvent, O extends DefaultOption = undefined>(
+    command: Command<O>,
+    options?: O
+  ): E {
+    const event = command(this.state, options as O) as E;
     this.state = reducer(this.state, event);
     return event;
   }
