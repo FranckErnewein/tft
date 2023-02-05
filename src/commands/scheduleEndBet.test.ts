@@ -9,23 +9,28 @@ describe("scheduleEndBet", () => {
   beforeEach(() => {
     game = new StateMachine();
     game.execute(startGame);
-  });
-  it("should start end time", (done) => {
-    const game = new StateMachine();
     game.execute(startRound);
+  });
+  it("should schedule end of bet", (done) => {
+    expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
+    expect(game.state.currentRound?.betEndTimer).toBeNull();
     game.executeAsync<BetTimeDecreased | BetTimeEnded, SEBOptions>(
       scheduleEndBet,
       {
         restTime: 50,
         interval: 10,
       },
-      () => {
-        console.log("huu");
+      (event) => {
+        console.log("event", event);
+        console.log("status", game.state.currentRound?.status);
+        expect(event.payload.restTime).toBeGreaterThan(0);
         // TODO implement restingTime on round in reducer
         expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
+        expect(game.state.currentRound?.betEndTimer).not.toBeNull();
       },
       () => {
         expect(game.state.currentRound?.status).toBe(RoundStatus.RUNNING);
+        expect(game.state.currentRound?.betEndTimer).toBe(0);
         done();
       }
     );

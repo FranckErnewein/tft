@@ -27,7 +27,7 @@ export interface Round {
   startedAt: string;
   endedAt: string | null;
   status: RoundStatus;
-  betEndTimer: number;
+  betEndTimer: number | null;
   result: RoundResult | null;
   bets: Record<string, Bet>;
 }

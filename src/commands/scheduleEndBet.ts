@@ -35,6 +35,7 @@ const scheduleEndBet: AsyncCommand<Options, BetTimeDecreased | BetTimeEnded> = (
   let runningInterval = setInterval(() => {
     eventEmmitedCount++;
     const newRestTime = restTime - interval * eventEmmitedCount;
+    console.log("newRestTime", newRestTime);
     if (newRestTime > 0) {
       emit(generateEvent(newRestTime));
     } else {
@@ -42,6 +43,7 @@ const scheduleEndBet: AsyncCommand<Options, BetTimeDecreased | BetTimeEnded> = (
     }
   }, interval);
   const runningTimeout = setTimeout(() => {
+    clearInterval(runningInterval);
     emit({
       type: EventType.BET_TIME_ENDED,
       datetime: timestamp(),
@@ -51,7 +53,7 @@ const scheduleEndBet: AsyncCommand<Options, BetTimeDecreased | BetTimeEnded> = (
   }, restTime);
   return () => {
     clearTimeout(runningTimeout);
-    clearTimeout(runningTimeout);
+    clearInterval(runningInterval);
   };
 };
 

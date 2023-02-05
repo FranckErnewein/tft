@@ -11,6 +11,7 @@ describe("playerJoin", () => {
     expect(game.state.pastRounds.length).toBe(0);
     expect(game.state.currentRound?.startedAt).toBeDefined();
     expect(game.state.currentRound?.endedAt).toBeNull();
+    expect(game.state.currentRound?.betEndTimer).toBeNull();
     expect(game.state.currentRound?.id).toBeDefined();
     expect(game.state.currentRound?.result).toBeNull();
   });
