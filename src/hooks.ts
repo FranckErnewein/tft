@@ -54,7 +54,7 @@ export function useCommand<
   E extends BaseEvent = GameEvent
 >(
   command: Command<O> | AsyncCommand<O, E>,
-  mutationOptions: { onSuccess: (json: CommandResponsePayload<E>) => void }
+  mutationOptions?: { onSuccess?: (json: CommandResponsePayload<E>) => void }
 ): UseCommand<O, E> {
   const { data, isLoading, mutate } = useMutation<
     CommandResponsePayload<E>,
