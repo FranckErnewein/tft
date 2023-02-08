@@ -1,5 +1,6 @@
 import { FC, ReactNode } from "react";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { DefaultOption, Command, AsyncCommand } from "../commands/types";
 import { BaseEvent, GameEvent } from "../events";
@@ -10,9 +11,17 @@ interface CommandOptionsProps<O, E> {
   options?: O;
   children?: ReactNode;
   onSuccess?: (event: E) => void;
-  color?: "error" | "primary" | "secondary" | "success" | "info" | "warning";
+  color?:
+    | "error"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "info"
+    | "warning"
+    | "inherit";
   variant?: "outlined" | "text" | "contained";
   disabled?: boolean;
+  icon?: ReactNode;
 }
 
 export default function createCommandButton<
@@ -26,22 +35,24 @@ export default function createCommandButton<
     color,
     variant = "contained",
     disabled = false,
+    icon,
   }) => {
-    const { mutate, isLoading, error } = useCommand<O, E>(command);
+    const { mutate, isLoading, error } = useCommand<O, E>(command, {
+      onSuccess: (json: CommandResponsePayload<E>) => {
+        if (json.type === "event" && onSuccess) onSuccess(json.event);
+      },
+    });
     const opt = options as O;
     return (
       <>
         <Button
           variant={variant}
           color={color}
-          onClick={() =>
-            mutate(opt, {
-              onSuccess: (json: CommandResponsePayload<E>) => {
-                if (json.type === "event" && onSuccess) onSuccess(json.event);
-              },
-            })
-          }
+          onClick={() => {
+            mutate(opt);
+          }}
           disabled={isLoading || disabled}
+          endIcon={isLoading ? <CircularProgress /> : icon}
         >
           {children}
         </Button>

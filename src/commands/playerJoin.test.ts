@@ -27,6 +27,6 @@ describe("playerJoin", () => {
   });
 
   it.todo("should reject join if game did not start");
-  it.todo("should reject player with empty name");
+  it.todo("should reject player with name with less than 2 letters");
   it.todo("should remove bet on current round when player leave");
 });

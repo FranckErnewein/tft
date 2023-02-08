@@ -42,22 +42,25 @@ export type CommandResponsePayload<E = GameEvent> =
   | { type: "error"; error: SerializedError }
   | { type: "async" };
 
-export function useCommand<
-  O extends DefaultOption = {},
-  E extends BaseEvent = GameEvent
->(
-  command: Command<O> | AsyncCommand<O, E>
-): {
+export interface UseCommand<O, E> {
   data: E | null;
   error: SerializedError | null;
   isLoading: boolean;
   mutate: UseMutateFunction<CommandResponsePayload<E>, unknown, O>;
-} {
+}
+
+export function useCommand<
+  O extends DefaultOption = {},
+  E extends BaseEvent = GameEvent
+>(
+  command: Command<O> | AsyncCommand<O, E>,
+  mutationOptions: { onSuccess: (json: CommandResponsePayload<E>) => void }
+): UseCommand<O, E> {
   const { data, isLoading, mutate } = useMutation<
     CommandResponsePayload<E>,
     unknown,
     O
-  >((options) => {
+  >(async (options: O) => {
     return fetch(`http://localhost:3000/commands/${command.name}`, {
       method: "POST",
       headers: {
@@ -65,7 +68,7 @@ export function useCommand<
       },
       body: JSON.stringify(options),
     }).then((r) => r.json());
-  });
+  }, mutationOptions);
   return {
     data: data?.type === "event" ? data.event : null,
     error: data?.type === "error" ? data.error : null,
