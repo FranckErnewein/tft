@@ -20,7 +20,7 @@ COPY src/ .
 
 # Run test
 FROM install AS test
-CMD yarn test
+CMD yarn tsc && yarn test
 
 # Build application
 FROM install AS build
