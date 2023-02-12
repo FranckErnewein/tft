@@ -1,2 +1,4 @@
 - [ ] Cancel a bet
 - [ ] Order bet by amount (desc)
+- [ ] Display round history
+- [ ] Always end bet 30s after round start

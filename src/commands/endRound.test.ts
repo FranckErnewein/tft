@@ -52,6 +52,9 @@ describe("endRound", () => {
     );
   });
 
+  it.todo("should just retrieve money when everybody lose");
+  it.todo("should divide with euclidian division (no rest)");
+
   it("should just increase money for the winner (2 players)", () => {
     if (!p1 || !p2) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
