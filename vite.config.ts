@@ -7,4 +7,7 @@ export default defineConfig({
     react(),
     // eslint()
   ],
+  esbuild: {
+    keepNames: true,
+  },
 });
