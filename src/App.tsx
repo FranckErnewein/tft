@@ -1,7 +1,7 @@
 import { useGame } from "./hooks";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import Admin from "./components/Admin";
+import Bookmaker from "./components/Bookmaker";
 import JoinGame from "./components/JoinGame";
 import Play from "./components/Play";
 import Betting from "./stories/Betting";
@@ -13,7 +13,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout game={game} />}>
         <Route index element={<JoinGame game={game} />} />
-        <Route path="admin" element={<Admin {...game} />} />
+        <Route path="bookmaker" element={<Bookmaker {...game} />} />
         <Route path="player/:playerId" element={<Play game={game} />} />
         <Route path="story">
           <Route path="betting/:playerId" element={<Betting />} />

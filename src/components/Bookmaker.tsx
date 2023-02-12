@@ -18,7 +18,7 @@ const StartRoundButton = createCommandButton(startRound);
 const ScheduleEndBetButton = createCommandButton<SEBOptions>(scheduleEndBet);
 const EndRoundButton = createCommandButton(endRound);
 
-const Admin: FC<Game> = (game) => {
+const Bookmaker: FC<Game> = (game) => {
   let status = "";
   let action = null;
   if (!game.id) {
@@ -67,7 +67,7 @@ const Admin: FC<Game> = (game) => {
   return (
     <>
       <Box>
-        <Typography variant="h3">Admin</Typography>
+        <Typography variant="h3">Bookmaker</Typography>
       </Box>
       <Paper>
         <Box p={3}>
@@ -91,4 +91,4 @@ const Admin: FC<Game> = (game) => {
   );
 };
 
-export default Admin;
+export default Bookmaker;
