@@ -7,15 +7,17 @@ import { Command, AsyncCommand, DefaultOption } from "./commands/types";
 import { GameEvent, BaseEvent } from "./events";
 import { SerializedError } from "./errors";
 
+console.log(import.meta.env);
+const apiUrl = import.meta.env.VITE_API_URL || "";
+console.log("apiUrl", apiUrl);
+
 export function useGame(): Game {
   const [gameState, setGameState] = useState<Game>(EMPTY_GAME);
   const [gameLoaded, setGameLoaded] = useState<boolean>(false);
   useQuery({
     queryKey: "state",
     queryFn: () =>
-      fetch("http://localhost:3000/state").then((r) =>
-        r.json()
-      ) as Promise<Game>,
+      fetch(`${apiUrl}/state`).then((r) => r.json()) as Promise<Game>,
     onSuccess: (data) => {
       setGameLoaded(true);
       setGameState(data);
@@ -24,7 +26,7 @@ export function useGame(): Game {
 
   useEffect(() => {
     if (gameLoaded) {
-      const socket = io("http://localhost:3000/");
+      const socket = io(apiUrl);
       let state: Game = gameState;
       socket.on("gameEvent", (event) => {
         state = reducer(state, event);
@@ -61,7 +63,7 @@ export function useCommand<
     unknown,
     O
   >(async (options: O) => {
-    return fetch(`http://localhost:3000/commands/${command.name}`, {
+    return fetch(`${apiUrl}/commands/${command.name}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
