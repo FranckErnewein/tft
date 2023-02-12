@@ -1,12 +1,12 @@
 import { FC, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Game, RoundResult, RoundStatus } from "../state";
 import { useCommand } from "../hooks";
-import { PlayerLeft, PlayerBet } from "../events";
+import { PlayerBet } from "../events";
 import playerBet, { Options as PlayerBetOptions } from "../commands/playerBet";
 import Bets from "./Bets";
 
