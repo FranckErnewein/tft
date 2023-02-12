@@ -7,9 +7,7 @@ import { Command, AsyncCommand, DefaultOption } from "./commands/types";
 import { GameEvent, BaseEvent } from "./events";
 import { SerializedError } from "./errors";
 
-console.log(import.meta.env);
 const apiUrl = import.meta.env.VITE_API_URL || "";
-console.log("apiUrl", apiUrl);
 
 export function useGame(): Game {
   const [gameState, setGameState] = useState<Game>(EMPTY_GAME);
