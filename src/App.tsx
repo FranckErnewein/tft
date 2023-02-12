@@ -12,7 +12,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout game={game} />}>
-        <Route index element={<JoinGame />} />
+        <Route index element={<JoinGame game={game} />} />
         <Route path="admin" element={<Admin {...game} />} />
         <Route path="player/:playerId" element={<Play game={game} />} />
         <Route path="story">
