@@ -26,7 +26,13 @@ describe("playerJoin", () => {
     );
   });
 
-  it.todo("should reject join if game did not start");
+  it("should reject join if game did not start", () => {
+    const game2 = new StateMachine();
+    expect(() => game2.execute(playerJoin, { playerName: "Franck" })).toThrow(
+      GameError
+    );
+  });
+
   it.todo("should reject player with name with less than 2 letters");
   it.todo("should remove bet on current round when player leave");
 });

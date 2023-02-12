@@ -16,6 +16,7 @@ const validate = createValidator<Options>(schema);
 
 const playerJoin: Command<Options> = (game, options): PlayerJoined => {
   validate(options);
+  if (!game.id) throw new GameError("no game started");
   Object.keys(game.players)
     .map((playerId) => game.players[playerId])
     .forEach((player) => {
