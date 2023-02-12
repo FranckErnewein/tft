@@ -78,6 +78,10 @@ app.get("/state", (_, response: Response) => {
   response.json(game.state);
 });
 
+app.get("*", function (_, response) {
+  response.sendFile(path.join(__dirname, "../dist/index.html"));
+});
+
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
