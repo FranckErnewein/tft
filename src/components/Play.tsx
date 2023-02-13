@@ -33,25 +33,33 @@ const Play: FC<Props> = ({ game }) => {
 
   return (
     <>
-      <Box textAlign="center" height="100px">
-        <Slider
-          valueLabelDisplay="on"
-          value={sliderValues}
-          color={color}
-          onChange={(_, v: number | number[], a: number) => {
-            if (typeof v !== "number")
-              setSliderValues(a === 0 ? [v[0], 0] : [v[1], 0]);
-          }}
-          valueLabelFormat={(value: number) => {
-            if (value > 0) return `win for ${value / 100}€`;
-            if (value < 0) return `lose for ${-value / 100}€`;
-            return "0";
-          }}
-          disabled={!isBetTime}
-          min={-1000}
-          step={5}
-          max={1000}
-        />
+      <Box textAlign="center" height="200px">
+        <Box>
+          <Typography variant="caption">your balance</Typography>
+          <Typography variant="h4">{player.balanceCents / 100}€</Typography>
+        </Box>
+        <br />
+        <br />
+        <Box>
+          <Slider
+            valueLabelDisplay="on"
+            value={sliderValues}
+            color={color}
+            onChange={(_, v: number | number[], a: number) => {
+              if (typeof v !== "number")
+                setSliderValues(a === 0 ? [v[0], 0] : [v[1], 0]);
+            }}
+            valueLabelFormat={(value: number) => {
+              if (value > 0) return `win for ${value / 100}€`;
+              if (value < 0) return `lose for ${-value / 100}€`;
+              return "0";
+            }}
+            disabled={!isBetTime}
+            min={-1000}
+            step={5}
+            max={1000}
+          />
+        </Box>
         {isBetTime && (
           <Button
             variant="contained"

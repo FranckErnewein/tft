@@ -18,8 +18,7 @@ function win(bet: Bet | undefined) {
 
 const Content = styled.div`
   position: relative;
-  padding: 30px 0;
-  margin: 10px 0;
+  padding: 40px 0;
 `;
 
 const Bar = styled.div<Bet>`

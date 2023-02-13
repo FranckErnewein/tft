@@ -32,7 +32,7 @@ const PlayerMenu: FC<Props> = ({ game }) => {
     <Box mt={1}>
       <Typography variant="overline">
         <Button startIcon={<AccountCircleIcon />} color="inherit">
-          {player.name} - {player.balanceCents / 100}€
+          {player.name}
         </Button>
         <LeaveButton
           options={{ playerId }}
