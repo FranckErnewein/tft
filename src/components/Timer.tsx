@@ -53,10 +53,12 @@ const AnimatedNumber = styled.div<{ scaleOut: boolean }>`
   text-align: center;
 `;
 
+type Variant = "h1" | "h2" | "h3" | "h4";
+
 const Timer: FC<Props> = ({ time }) => {
   const scaleOut = time < 5001;
   let color;
-  let variant = "h4";
+  let variant: Variant = "h4";
   if (time < 10001) {
     color = "secondary";
     variant = "h3";
