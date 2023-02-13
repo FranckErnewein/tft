@@ -33,16 +33,25 @@ const Bookmaker: FC<Game> = (game) => {
       status += `finish in ${Math.round(
         game.currentRound.betEndTimer / 1000
       )}s`;
+    const disabled =
+      typeof game.currentRound.betEndTimer === "number" &&
+      game.currentRound.betEndTimer > 0;
     action = (
-      <ScheduleEndBetButton
-        options={{ restTime: 5000, interval: 1000 }}
-        disabled={
-          typeof game.currentRound.betEndTimer === "number" &&
-          game.currentRound.betEndTimer > 0
-        }
-      >
-        End bets in 5s
-      </ScheduleEndBetButton>
+      <Typography>
+        <ScheduleEndBetButton
+          options={{ restTime: 5000, interval: 1000 }}
+          disabled={disabled}
+        >
+          End bets in 5s
+        </ScheduleEndBetButton>
+        - OR -
+        <ScheduleEndBetButton
+          options={{ restTime: 30000, interval: 1000 }}
+          disabled={disabled}
+        >
+          End bets in 30s
+        </ScheduleEndBetButton>
+      </Typography>
     );
   } else if (game.currentRound.status === RoundStatus.RUNNING) {
     status = "Bet time over. how did it end ?";
