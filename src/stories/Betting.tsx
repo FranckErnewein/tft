@@ -49,7 +49,7 @@ const mock: Game = {
     startedAt: "2023-02-03T08:23:29.553Z",
     endedAt: null,
     status: RoundStatus.BET_TIME,
-    betEndTimer: 5000,
+    betEndTimer: 20000,
     result: null,
     bets: {
       b: {
@@ -83,7 +83,7 @@ export default function Betting() {
           ...game,
           currentRound: {
             ...game.currentRound,
-            betEndTimer: newTimer > -1 ? newTimer : 5000,
+            betEndTimer: newTimer > -1 ? newTimer : 30000,
           },
         });
       }

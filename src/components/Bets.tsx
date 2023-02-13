@@ -5,7 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import LinearProgress from "@mui/material/LinearProgress";
+import Timer from "./Timer";
 import { Game, RoundResult, Player, Bet } from "../state";
 
 interface Props {
@@ -58,37 +58,6 @@ const VerticalLine = styled.div`
   z-index: -1;
 `;
 
-const betTimerAnimation = keyframes`
-  0% {
-    transform: scale(1);
-    opacity: 0;
-  }
-  10% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  15% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(5);
-    opacity: 0;
-  }
-`;
-
-const Timer = styled.div`
-  z-index: 1000;
-  pointer-events: none;
-  position: absolute;
-  top: 0px;
-  left: 50%;
-  width: 100px;
-  animation: ${betTimerAnimation} 700ms linear both;
-  margin-left: -50px;
-  text-align: center;
-`;
-
 const Bets: FC<Props> = ({ game }) => {
   const totalWin = Object.values(game.currentRound?.bets || {})
     .filter((bet) => bet.expectedResult === RoundResult.WIN)
@@ -101,11 +70,7 @@ const Bets: FC<Props> = ({ game }) => {
       <VerticalLine />
       {typeof game.currentRound?.betEndTimer === "number" &&
         game.currentRound.betEndTimer > 0 && (
-          <Timer key={game.currentRound.betEndTimer}>
-            <Typography variant="h2" color="error">
-              {Math.round(game.currentRound.betEndTimer / 1000)}
-            </Typography>
-          </Timer>
+          <Timer time={game.currentRound.betEndTimer} />
         )}
       <Box>
         <Grid container>
