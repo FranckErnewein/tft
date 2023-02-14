@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "test": "jest",
+    "test:dev": "jest --watch",
     "build": "tsc && vite build",
     "start": "ts-node --project tsconfig.server.json src/server.ts",
     "preview": "vite preview"
