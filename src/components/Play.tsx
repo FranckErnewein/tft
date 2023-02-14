@@ -2,7 +2,9 @@ import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { Game, RoundResult, RoundStatus } from "../state";
 import { useCommand } from "../hooks";
@@ -17,6 +19,8 @@ export interface Props {
 const Play: FC<Props> = ({ game }) => {
   const { mutate: bet } = useCommand<PlayerBetOptions, PlayerBet>(playerBet);
   const [sliderValues, setSliderValues] = useState<number[]>([0, 0]);
+  const increaseValue = (incr: number) =>
+    setSliderValues([sliderValues[0] + incr, 0]);
   const { playerId } = useParams();
   if (!playerId) return null;
   const player = game.players[playerId];
@@ -30,10 +34,16 @@ const Play: FC<Props> = ({ game }) => {
   const color =
     betOptions.forecast === RoundResult.WIN ? "primary" : "secondary";
   const isBetTime = game.currentRound?.status === RoundStatus.BET_TIME;
+  const marks = [...Array(21).keys()].map((i) => {
+    return {
+      value: i * 100 - 1000,
+      label: Math.abs(i - 10) + "€",
+    };
+  });
 
   return (
     <>
-      <Box textAlign="center" height="200px">
+      <Box textAlign="center">
         <Box>
           <Typography variant="caption">your balance</Typography>
           <Typography variant="h4">{player.balanceCents / 100}€</Typography>
@@ -55,20 +65,44 @@ const Play: FC<Props> = ({ game }) => {
               return "0";
             }}
             disabled={!isBetTime}
-            min={-1000}
+            min={-500}
             step={5}
-            max={1000}
+            marks={marks}
+            max={500}
           />
         </Box>
+        <Grid container>
+          <Grid item xs={5} textAlign="left">
+            <ButtonGroup variant="outlined" color="secondary">
+              <Button onClick={() => increaseValue(-100)}>+1€</Button>
+              <Button onClick={() => increaseValue(-50)}>+0.50€</Button>
+              <Button onClick={() => increaseValue(-10)}>+0.10€</Button>
+            </ButtonGroup>
+          </Grid>
+          <Grid item xs={2} textAlign="center">
+            <Button variant="outlined" onClick={() => setSliderValues([0, 0])}>
+              Reset 0€
+            </Button>
+          </Grid>
+          <Grid item xs={5} textAlign="right">
+            <ButtonGroup variant="outlined" color="primary">
+              <Button onClick={() => increaseValue(10)}>+0.10€</Button>
+              <Button onClick={() => increaseValue(50)}>+0.50€</Button>
+              <Button onClick={() => increaseValue(100)}>+1€</Button>
+            </ButtonGroup>
+          </Grid>
+        </Grid>
         {isBetTime && (
-          <Button
-            variant="contained"
-            color={color}
-            disabled={betOptions.amountCents === 0}
-            onClick={() => bet(betOptions)}
-          >
-            Bet
-          </Button>
+          <Box mt={3}>
+            <Button
+              variant="contained"
+              color={color}
+              disabled={betOptions.amountCents === 0}
+              onClick={() => bet(betOptions)}
+            >
+              Bet
+            </Button>
+          </Box>
         )}
         {!isBetTime && game.currentRound && (
           <Typography variant="overline">Fighting now</Typography>
