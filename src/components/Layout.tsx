@@ -20,7 +20,7 @@ const Layout: FC<Props> = ({ game }) => {
         <Grid container>
           <Grid item xs={8}>
             <Typography variant="h5" component="h1" sx={{ flexGrow: 1, p: 1 }}>
-              Team For Gamble
+              Minibet
             </Typography>
           </Grid>
           <Grid item xs={4} textAlign="right">
