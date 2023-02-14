@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import Bookmaker from "./components/Bookmaker";
 import JoinGame from "./components/JoinGame";
 import Play from "./components/Play";
+import DumpState from "./components/DumpState";
 import Betting from "./stories/Betting";
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
         <Route path="player/:playerId" element={<Play game={game} />} />
         <Route path="story">
           <Route path="betting/:playerId" element={<Betting />} />
+        </Route>
+        <Route path="debug">
+          <Route path="state" element={<DumpState game={game} />} />
         </Route>
       </Route>
     </Routes>
