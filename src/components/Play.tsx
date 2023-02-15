@@ -11,8 +11,9 @@ import { useCommand } from "../hooks";
 import { PlayerBet } from "../events";
 import playerBet, { Options as PlayerBetOptions } from "../commands/playerBet";
 import Bets from "./Bets";
+import RoundHistory from "./RoundHistory";
 
-export interface Props {
+interface Props {
   game: Game;
 }
 
@@ -44,10 +45,15 @@ const Play: FC<Props> = ({ game }) => {
   return (
     <>
       <Box textAlign="center">
-        <Box>
-          <Typography variant="caption">your balance</Typography>
-          <Typography variant="h4">{player.balanceCents / 100}€</Typography>
-        </Box>
+        <Grid container>
+          <Grid item xs={2} textAlign="left">
+            <RoundHistory game={game} />
+          </Grid>
+          <Grid item xs={8} textAlign="center">
+            <Typography variant="caption">your balance</Typography>
+            <Typography variant="h4">{player.balanceCents / 100}€</Typography>
+          </Grid>
+        </Grid>
         <br />
         <br />
         <Box>
@@ -73,19 +79,31 @@ const Play: FC<Props> = ({ game }) => {
         </Box>
         <Grid container>
           <Grid item xs={5} textAlign="left">
-            <ButtonGroup variant="outlined" color="secondary">
+            <ButtonGroup
+              variant="outlined"
+              color="secondary"
+              disabled={!isBetTime}
+            >
               <Button onClick={() => increaseValue(-100)}>+1€</Button>
               <Button onClick={() => increaseValue(-50)}>+0.50€</Button>
               <Button onClick={() => increaseValue(-10)}>+0.10€</Button>
             </ButtonGroup>
           </Grid>
           <Grid item xs={2} textAlign="center">
-            <Button variant="outlined" onClick={() => setSliderValues([0, 0])}>
+            <Button
+              variant="outlined"
+              onClick={() => setSliderValues([0, 0])}
+              disabled={!isBetTime}
+            >
               Reset 0€
             </Button>
           </Grid>
           <Grid item xs={5} textAlign="right">
-            <ButtonGroup variant="outlined" color="primary">
+            <ButtonGroup
+              variant="outlined"
+              color="primary"
+              disabled={!isBetTime}
+            >
               <Button onClick={() => increaseValue(10)}>+0.10€</Button>
               <Button onClick={() => increaseValue(50)}>+0.50€</Button>
               <Button onClick={() => increaseValue(100)}>+1€</Button>

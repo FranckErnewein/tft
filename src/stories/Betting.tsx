@@ -70,7 +70,82 @@ const mock: Game = {
       },
     },
   },
-  pastRounds: [],
+  pastRounds: [
+    {
+      id: "06a451a0-050a-4c7b-a515-49d93299c2aa",
+      startedAt: "2023-02-03T08:23:29.553Z",
+      endedAt: "2023-02-03T08:23:29.553Z",
+      status: RoundStatus.OVER,
+      betEndTimer: 0,
+      result: RoundResult.WIN,
+      bets: {
+        b: {
+          amountCents: 130,
+          expectedResult: RoundResult.LOSE,
+        },
+        c: {
+          amountCents: 200,
+          expectedResult: RoundResult.WIN,
+        },
+        d: {
+          amountCents: 150,
+          expectedResult: RoundResult.WIN,
+        },
+        f: {
+          amountCents: 50,
+          expectedResult: RoundResult.LOSE,
+        },
+      },
+    },
+    {
+      id: "06a451a0-050a-4c7b-a515-49d93299c2aa",
+      startedAt: "2023-02-03T08:23:29.553Z",
+      endedAt: "2023-02-03T08:23:29.553Z",
+      status: RoundStatus.OVER,
+      betEndTimer: 0,
+      result: RoundResult.WIN,
+      bets: {
+        b: {
+          amountCents: 130,
+          expectedResult: RoundResult.LOSE,
+        },
+        d: {
+          amountCents: 150,
+          expectedResult: RoundResult.WIN,
+        },
+        f: {
+          amountCents: 50,
+          expectedResult: RoundResult.LOSE,
+        },
+      },
+    },
+    {
+      id: "06a451a0-050a-4c7b-a515-49d93299c2aa",
+      startedAt: "2023-02-03T08:23:29.553Z",
+      endedAt: "2023-02-03T08:23:29.553Z",
+      status: RoundStatus.OVER,
+      betEndTimer: 0,
+      result: RoundResult.LOSE,
+      bets: {
+        b: {
+          amountCents: 130,
+          expectedResult: RoundResult.LOSE,
+        },
+        c: {
+          amountCents: 200,
+          expectedResult: RoundResult.WIN,
+        },
+        d: {
+          amountCents: 150,
+          expectedResult: RoundResult.WIN,
+        },
+        f: {
+          amountCents: 50,
+          expectedResult: RoundResult.LOSE,
+        },
+      },
+    },
+  ],
 };
 
 export default function Betting() {
