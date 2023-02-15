@@ -10,9 +10,9 @@ import {
   BetTimeEnded,
   RoundOver,
 } from "./events";
-import { Game, EMPTY_GAME, Player, Round, Bet, RoundStatus } from "./state";
+import { Game, EMPTY_GAME, Player, Round, RoundStatus } from "./state";
 import { GameError, StateError } from "./errors";
-import { amountBet } from "./round/query";
+import { amountBet } from "./round/queries";
 
 export interface Reducer<E extends GameEvent> {
   (state: Game, abstractEvent: E): Game;

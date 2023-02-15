@@ -14,8 +14,14 @@ export function amountBet(round: Round) {
   );
   const byLosers = total - byWinners;
   return {
-    total,
     byWinners,
     byLosers,
   };
+}
+
+export function roundResultForPlayer(round: Round, playerId: string): number {
+  const bet = round.bets[playerId];
+  if (!bet) return 0;
+  const { byLosers, byWinners } = amountBet(round);
+  return byLosers * (bet.amountCents / byWinners);
 }

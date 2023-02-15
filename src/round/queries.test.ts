@@ -1,5 +1,5 @@
-import { RoundResult, RoundStatus } from "./state";
-import roundResultForPlayer from "./roundResultForPlayer";
+import { RoundResult, RoundStatus } from "../state";
+import { roundResultForPlayer } from "./queries";
 
 const defaultRound = {
   id: "28d6e889-4f85-4374-97e8-8d91de0294fe",
@@ -58,5 +58,47 @@ describe("roundResultForPlayer", () => {
       },
     };
     expect(roundResultForPlayer(round, "a")).toBe(100);
+  });
+
+  it("should say return 50 because player with another one win over one guy", () => {
+    const round = {
+      ...defaultRound,
+      bets: {
+        a: {
+          amountCents: 100,
+          expectedResult: RoundResult.WIN,
+        },
+        b: {
+          amountCents: 100,
+          expectedResult: RoundResult.WIN,
+        },
+        c: {
+          amountCents: 100,
+          expectedResult: RoundResult.LOSE,
+        },
+      },
+    };
+    expect(roundResultForPlayer(round, "a")).toBe(50);
+  });
+
+  it("should say return 100 because player win over 2 guys", () => {
+    const round = {
+      ...defaultRound,
+      bets: {
+        a: {
+          amountCents: 100,
+          expectedResult: RoundResult.WIN,
+        },
+        b: {
+          amountCents: 100,
+          expectedResult: RoundResult.LOSE,
+        },
+        c: {
+          amountCents: 100,
+          expectedResult: RoundResult.LOSE,
+        },
+      },
+    };
+    expect(roundResultForPlayer(round, "a")).toBe(200);
   });
 });
