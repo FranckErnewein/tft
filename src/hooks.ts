@@ -20,6 +20,7 @@ export function useGame(): Game {
       setGameLoaded(true);
       setGameState(data);
     },
+    enabled: !gameLoaded,
   });
 
   useEffect(() => {
