@@ -1,4 +1,4 @@
-import { StateMachine, Player, RoundResult } from "../state";
+import { StateMachine, Player, RoundResult, RoundStatus } from "../state";
 import { DEFAULT_PLAYER_BALANCE } from "../constants";
 // import { GameError } from "../errors";
 import { GameStarted, PlayerJoined, RoundStarted, PlayerBet } from "../events";
@@ -37,6 +37,7 @@ describe("endRound", () => {
     expect(game.state.pastRounds).toHaveLength(1);
     expect(game.state.pastRounds[0]?.endedAt).not.toBeNull();
     expect(game.state.pastRounds[0]?.result).toBe(RoundResult.WIN);
+    expect(game.state.pastRounds[0]?.status).toBe(RoundStatus.OVER);
   });
 
   it("should just retrieve money when only one player bet", () => {

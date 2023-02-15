@@ -57,6 +57,6 @@ describe("roundResultForPlayer", () => {
         },
       },
     };
-    expect(roundResultForPlayer(round, "a")).toBe(0);
+    expect(roundResultForPlayer(round, "a")).toBe(100);
   });
 });
