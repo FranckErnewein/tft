@@ -102,7 +102,7 @@ describe("roundResultForPlayer", () => {
     expect(roundResultForPlayer(round, "a")).toBe(200);
   });
 
-  it("should say return -100 because player lose over 2 guys", () => {
+  it("should return -100 because player lose over 2 guys", () => {
     const round = {
       ...defaultRound,
       bets: {
@@ -120,6 +120,6 @@ describe("roundResultForPlayer", () => {
         },
       },
     };
-    expect(roundResultForPlayer(round, "a")).toBe(200);
+    expect(roundResultForPlayer(round, "a")).toBe(-100);
   });
 });
