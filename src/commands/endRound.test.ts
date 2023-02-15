@@ -53,7 +53,6 @@ describe("endRound", () => {
     );
   });
 
-  it.todo("should just retrieve money when everybody lose");
   it.todo("should divide with euclidian division (no rest)");
 
   it("should just increase money for the winner (2 players)", () => {
@@ -74,6 +73,35 @@ describe("endRound", () => {
     );
     expect(game.state.players[p2.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE - 300
+    );
+  });
+
+  it("should just retrieve money when everybody lose", () => {
+    if (!p1 || !p2 || !p3) throw "player is missing for test";
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 200,
+      forecast: RoundResult.LOSE,
+      playerId: p1.id,
+    });
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 300,
+      forecast: RoundResult.LOSE,
+      playerId: p2.id,
+    });
+    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+      amountCents: 400,
+      forecast: RoundResult.LOSE,
+      playerId: p3.id,
+    });
+    game.execute(endRound, { roundResult: RoundResult.WIN });
+    expect(game.state.players[p1.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE
+    );
+    expect(game.state.players[p2.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE
+    );
+    expect(game.state.players[p3.id]?.balanceCents).toBe(
+      DEFAULT_PLAYER_BALANCE
     );
   });
 
