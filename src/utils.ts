@@ -16,3 +16,13 @@ export function createValidator<O>(schema: any): (options: unknown) => void {
     }
   };
 }
+
+export function displayAmount(amountCts: number): string {
+  let str = (Math.round(amountCts) / 100).toString();
+  const digits = str.split(".")[1];
+  if (digits && digits.length === 1) {
+    str += "0";
+  }
+  str += "€";
+  return str;
+}

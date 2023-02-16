@@ -3,8 +3,14 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
 
-import { Game, RoundStatus, RoundResult } from "../state";
+import { Game, Player, RoundStatus, RoundResult } from "../state";
+import { displayAmount } from "../utils";
 import createCommandButton from "./createCommandButton";
 import startGame from "../commands/startGame";
 import startRound from "../commands/startRound";
@@ -44,7 +50,6 @@ const Bookmaker: FC<Game> = (game) => {
         >
           End bets in 5s
         </ScheduleEndBetButton>
-        - OR -
         <ScheduleEndBetButton
           options={{ restTime: 30000, interval: 1000 }}
           disabled={disabled}
@@ -57,19 +62,15 @@ const Bookmaker: FC<Game> = (game) => {
     status = "Bet time over. how did it end ?";
     action = (
       <>
-        <Grid item xs={2}>
-          <EndRoundButton
-            color="secondary"
-            options={{ roundResult: RoundResult.LOSE }}
-          >
-            Round lost
-          </EndRoundButton>
-        </Grid>
-        <Grid item xs={2}>
-          <EndRoundButton options={{ roundResult: RoundResult.WIN }}>
-            Round won
-          </EndRoundButton>
-        </Grid>
+        <EndRoundButton
+          color="secondary"
+          options={{ roundResult: RoundResult.LOSE }}
+        >
+          Round lost
+        </EndRoundButton>
+        <EndRoundButton options={{ roundResult: RoundResult.WIN }}>
+          Round won
+        </EndRoundButton>
       </>
     );
   }
@@ -80,14 +81,38 @@ const Bookmaker: FC<Game> = (game) => {
       </Box>
       <Paper>
         <Box p={3}>
-          {game.currentRound && (
-            <Typography variant="h5">
-              Round n°{game.pastRounds.length + 1}
-            </Typography>
-          )}
-          <Typography variant="body1">{status}</Typography>
-          <Grid container mt={3}>
-            {action}
+          <Grid container>
+            <Grid item xs={4}>
+              {game.currentRound && (
+                <Typography variant="h5">
+                  Round n°{game.pastRounds.length + 1}
+                </Typography>
+              )}
+              <br />
+              <Typography variant="body1">{status}</Typography>
+              <br />
+              <Box display="flex" justifyContent="space-between">
+                {action}
+              </Box>
+            </Grid>
+            <Grid item xs={4} />
+            <Grid item xs={4}>
+              <List>
+                {Object.values(game.players).map((player: Player) => {
+                  return (
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar>{player.name[0]}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={player.name}
+                        secondary={displayAmount(player.balanceCents)}
+                      />
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Grid>
           </Grid>
         </Box>
       </Paper>

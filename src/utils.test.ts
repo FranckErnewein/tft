@@ -1,5 +1,5 @@
 import { JTDDataType } from "ajv/dist/jtd";
-import { createValidator } from "./utils";
+import { createValidator, displayAmount } from "./utils";
 
 const userSchema = {
   properties: {
@@ -52,6 +52,19 @@ describe("utils", () => {
       const validatePost = createValidator<Post>(postSchema);
       expect(() => validatePost({ likes: 4 })).not.toThrow();
       expect(() => validatePost({ likes: false })).toThrow();
+    });
+  });
+
+  describe("displayAmount", () => {
+    it("should display a rounded amount", () => {
+      expect(displayAmount(200)).toBe("2€");
+    });
+
+    it("should round 266.66666", () => {
+      expect(displayAmount(266.6666)).toBe("2.67€");
+    });
+    it("should add a 0 at 2.6", () => {
+      expect(displayAmount(260)).toBe("2.60€");
     });
   });
 });
