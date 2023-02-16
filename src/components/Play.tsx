@@ -1,10 +1,11 @@
-import { FC, useState } from "react";
-import { useParams } from "react-router-dom";
+import { FC, useState, useEffect } from "react";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { Game, RoundResult, RoundStatus } from "../state";
 import { useCommand } from "../hooks";
@@ -19,13 +20,33 @@ interface Props {
 
 const Play: FC<Props> = ({ game }) => {
   const { mutate: bet } = useCommand<PlayerBetOptions, PlayerBet>(playerBet);
+  const navigate = useNavigate();
   const [sliderValues, setSliderValues] = useState<number[]>([0, 0]);
   const increaseValue = (incr: number) =>
     setSliderValues([sliderValues[0] + incr, 0]);
   const { playerId } = useParams();
-  if (!playerId) return null;
-  const player = game.players[playerId];
-  if (!player) return null;
+  const player = playerId ? game.players[playerId] : null;
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+    if (!player) {
+      timeout = setTimeout(() => {
+        if (!player) navigate("/");
+      }, 5000);
+    }
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [player]);
+
+  if (!playerId) return <Navigate to="/" />;
+  if (!player) {
+    return (
+      <Box textAlign="center" p={10}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   const betOptions: PlayerBetOptions = {
     amountCents: Math.abs(sliderValues[0]),
