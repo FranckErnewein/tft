@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { Game, RoundResult, RoundStatus } from "../state";
+import { displayAmount } from "../utils";
 import { useCommand } from "../hooks";
 import { PlayerBet } from "../events";
 import playerBet, { Options as PlayerBetOptions } from "../commands/playerBet";
@@ -72,7 +73,9 @@ const Play: FC<Props> = ({ game }) => {
           </Grid>
           <Grid item xs={8} textAlign="center">
             <Typography variant="caption">your balance</Typography>
-            <Typography variant="h4">{player.balanceCents / 100}€</Typography>
+            <Typography variant="h4">
+              {displayAmount(player.balanceCents)}
+            </Typography>
           </Grid>
         </Grid>
         <br />
@@ -87,8 +90,8 @@ const Play: FC<Props> = ({ game }) => {
                 setSliderValues(a === 0 ? [v[0], 0] : [v[1], 0]);
             }}
             valueLabelFormat={(value: number) => {
-              if (value > 0) return `win for ${value / 100}€`;
-              if (value < 0) return `lose for ${-value / 100}€`;
+              if (value > 0) return `win for ${displayAmount(value)}`;
+              if (value < 0) return `lose for ${displayAmount(-value)}`;
               return "0";
             }}
             disabled={!isBetTime}

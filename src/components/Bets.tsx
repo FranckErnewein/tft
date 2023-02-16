@@ -1,5 +1,5 @@
 import { FC } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Timer from "./Timer";
 import { Game, RoundResult, Player, Bet } from "../state";
+import { displayAmount } from "../utils";
 
 interface Props {
   game: Game;
@@ -79,7 +80,7 @@ const Bets: FC<Props> = ({ game }) => {
               Total for lose
             </Typography>
             <Typography variant="h3" color="secondary">
-              {totalLose / 100}€
+              {displayAmount(totalLose)}
             </Typography>
           </Grid>
           <Grid item xs={6} textAlign="right">
@@ -87,7 +88,7 @@ const Bets: FC<Props> = ({ game }) => {
               Total for win
             </Typography>
             <Typography variant="h3" color="primary">
-              {totalWin / 100}€
+              {displayAmount(totalWin)}
             </Typography>
           </Grid>
         </Grid>
@@ -101,7 +102,7 @@ const Bets: FC<Props> = ({ game }) => {
               {bet && (
                 <Bar {...bet}>
                   <Typography variant="caption">
-                    {bet.amountCents / 100} €
+                    {displayAmount(bet.amountCents)}
                   </Typography>
                 </Bar>
               )}

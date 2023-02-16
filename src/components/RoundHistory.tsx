@@ -11,8 +11,9 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { roundResultForPlayer } from "../round/queries";
 
+import { roundResultForPlayer } from "../round/queries";
+import { displayAmount } from "../utils";
 import { Game, Round, Bet } from "../state";
 
 interface Props {
@@ -52,7 +53,7 @@ const RoundHistory: FC<Props> = ({ game }) => {
                 <ListItem dense>
                   <ListItemIcon>{icon}</ListItemIcon>
                   <ListItemText
-                    primary={`${Math.round(diffCents) / 100}€`}
+                    primary={displayAmount(diffCents)}
                     secondary={`${winnersCount} winners / ${betsCount} bets`}
                   />
                 </ListItem>
