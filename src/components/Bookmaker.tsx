@@ -14,14 +14,11 @@ import { displayAmount } from "../utils";
 import createCommandButton from "./createCommandButton";
 import startGame from "../commands/startGame";
 import startRound from "../commands/startRound";
-import scheduleEndBet, {
-  Options as SEBOptions,
-} from "../commands/scheduleEndBet";
 import endRound from "../commands/endRound";
+import ScheduleEndBetAction from "./ScheduleEndBetAction";
 
 const StartGameButton = createCommandButton(startGame);
 const StartRoundButton = createCommandButton(startRound);
-const ScheduleEndBetButton = createCommandButton<SEBOptions>(scheduleEndBet);
 const EndRoundButton = createCommandButton(endRound);
 
 const Bookmaker: FC<Game> = (game) => {
@@ -42,22 +39,7 @@ const Bookmaker: FC<Game> = (game) => {
     const disabled =
       typeof game.currentRound.betEndTimer === "number" &&
       game.currentRound.betEndTimer > 0;
-    action = (
-      <Typography>
-        <ScheduleEndBetButton
-          options={{ restTime: 5000, interval: 1000 }}
-          disabled={disabled}
-        >
-          End bets in 5s
-        </ScheduleEndBetButton>
-        <ScheduleEndBetButton
-          options={{ restTime: 30000, interval: 1000 }}
-          disabled={disabled}
-        >
-          End bets in 30s
-        </ScheduleEndBetButton>
-      </Typography>
-    );
+    action = <ScheduleEndBetAction disabled={disabled} />;
   } else if (game.currentRound.status === RoundStatus.RUNNING) {
     status = "Bet time over. how did it end ?";
     action = (
@@ -82,7 +64,7 @@ const Bookmaker: FC<Game> = (game) => {
       <Paper>
         <Box p={3}>
           <Grid container>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               {game.currentRound && (
                 <Typography variant="h5">
                   Round n°{game.pastRounds.length + 1}
@@ -95,7 +77,7 @@ const Bookmaker: FC<Game> = (game) => {
                 {action}
               </Box>
             </Grid>
-            <Grid item xs={4} />
+            <Grid item xs={2} />
             <Grid item xs={4}>
               <List>
                 {Object.values(game.players).map((player: Player) => {
