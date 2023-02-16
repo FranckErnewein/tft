@@ -13,7 +13,8 @@ import { useCommand } from "../hooks";
 import { PlayerBet } from "../events";
 import playerBet, { Options as PlayerBetOptions } from "../commands/playerBet";
 import Bets from "./Bets";
-import RoundHistory from "./RoundHistory";
+import RoundHistoryPanel from "./RoundHistoryPanel";
+import PlayerListPanel from "./PlayerListPanel";
 
 interface Props {
   game: Game;
@@ -69,13 +70,16 @@ const Play: FC<Props> = ({ game }) => {
       <Box textAlign="center">
         <Grid container>
           <Grid item xs={2} textAlign="left">
-            <RoundHistory game={game} />
+            <RoundHistoryPanel game={game} />
           </Grid>
           <Grid item xs={8} textAlign="center">
             <Typography variant="caption">your balance</Typography>
             <Typography variant="h4">
               {displayAmount(player.balanceCents)}
             </Typography>
+          </Grid>
+          <Grid item xs={2} textAlign="right">
+            <PlayerListPanel game={game} />
           </Grid>
         </Grid>
         <br />

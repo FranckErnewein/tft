@@ -35,10 +35,10 @@ const RoundHistory: FC<Props> = ({ game }) => {
         onClick={() => setOpen(true)}
         startIcon={<FormatListBulletedIcon />}
       >
-        Match history
+        Rounds history
       </Button>
-      <Drawer open={open} onClose={() => setOpen(false)}>
-        <Box minWidth="200px">
+      <Drawer open={open} onClose={() => setOpen(false)} anchor="left">
+        <Box minWidth="300px">
           <List>
             {game.pastRounds.map((round: Round) => {
               const diffCents = roundResultForPlayer(round, playerId);

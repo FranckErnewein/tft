@@ -3,19 +3,14 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 
-import { Game, Player, RoundStatus, RoundResult } from "../state";
-import { displayAmount } from "../utils";
+import { Game, RoundStatus, RoundResult } from "../state";
 import createCommandButton from "./createCommandButton";
 import startGame from "../commands/startGame";
 import startRound from "../commands/startRound";
 import endRound from "../commands/endRound";
 import ScheduleEndBetAction from "./ScheduleEndBetAction";
+import PlayerList from "./PlayerList";
 
 const StartGameButton = createCommandButton(startGame);
 const StartRoundButton = createCommandButton(startRound);
@@ -79,21 +74,7 @@ const Bookmaker: FC<Game> = (game) => {
             </Grid>
             <Grid item xs={2} />
             <Grid item xs={4}>
-              <List>
-                {Object.values(game.players).map((player: Player) => {
-                  return (
-                    <ListItem>
-                      <ListItemAvatar>
-                        <Avatar>{player.name[0]}</Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={player.name}
-                        secondary={displayAmount(player.balanceCents)}
-                      />
-                    </ListItem>
-                  );
-                })}
-              </List>
+              <PlayerList players={game.players} />
             </Grid>
           </Grid>
         </Box>
