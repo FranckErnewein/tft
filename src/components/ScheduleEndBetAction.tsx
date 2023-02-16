@@ -21,15 +21,24 @@ export interface Props {
 const ScheduleEndBetAction: FC<Props> = ({ disabled }) => {
   const [value, updateCookie] = useCookie("bet-timer");
   const [time, setTime] = useState<number>(value ? parseInt(value) : 25);
+
   useEffect(() => {
     const newValue = time.toString();
     if (value !== newValue) {
       updateCookie(newValue);
     }
   }, [time]);
+
+  const marks = [...Array(31).keys()].map((i) => {
+    return {
+      value: i,
+      label: i % 10 === 0 ? i + "s" : "",
+    };
+  });
+
   return (
     <Box width="400px">
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" justifyContent="space-between">
         <IconButton
           color="primary"
           aria-label="less time"
@@ -43,7 +52,7 @@ const ScheduleEndBetAction: FC<Props> = ({ disabled }) => {
             min={0}
             step={1}
             value={time}
-            marks
+            marks={marks}
             max={30}
             valueLabelFormat={(value: number) => value + "s"}
             valueLabelDisplay="auto"
