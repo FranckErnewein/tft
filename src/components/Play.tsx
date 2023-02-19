@@ -52,11 +52,11 @@ const Play: FC<Props> = ({ game }) => {
 
   const betOptions: PlayerBetOptions = {
     amountCents: Math.abs(sliderValues[0]),
-    forecast: sliderValues[0] > 0 ? RoundResult.WIN : RoundResult.LOSE,
+    forecast: sliderValues[0] > 0 ? RoundResult.ANSWER_A : RoundResult.ANSWER_B,
     playerId,
   };
   const color =
-    betOptions.forecast === RoundResult.WIN ? "primary" : "secondary";
+    betOptions.forecast === RoundResult.ANSWER_A ? "primary" : "secondary";
   const isBetTime = game.currentRound?.status === RoundStatus.BET_TIME;
   const marks = [...Array(21).keys()].map((i) => {
     return {

@@ -41,11 +41,11 @@ const Bookmaker: FC<Game> = (game) => {
       <>
         <EndRoundButton
           color="secondary"
-          options={{ roundResult: RoundResult.LOSE }}
+          options={{ roundResult: RoundResult.ANSWER_B }}
         >
           Round lost
         </EndRoundButton>
-        <EndRoundButton options={{ roundResult: RoundResult.WIN }}>
+        <EndRoundButton options={{ roundResult: RoundResult.ANSWER_A }}>
           Round won
         </EndRoundButton>
       </>

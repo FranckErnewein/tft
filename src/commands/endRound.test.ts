@@ -32,11 +32,11 @@ describe("endRound", () => {
   });
 
   it("end round with no bet, just archive last round", () => {
-    game.execute(endRound, { roundResult: RoundResult.WIN });
+    game.execute(endRound, { roundResult: RoundResult.ANSWER_A });
     expect(game.state.currentRound).toBeNull();
     expect(game.state.pastRounds).toHaveLength(1);
     expect(game.state.pastRounds[0]?.endedAt).not.toBeNull();
-    expect(game.state.pastRounds[0]?.result).toBe(RoundResult.WIN);
+    expect(game.state.pastRounds[0]?.result).toBe(RoundResult.ANSWER_A);
     expect(game.state.pastRounds[0]?.status).toBe(RoundStatus.OVER);
   });
 
@@ -44,10 +44,10 @@ describe("endRound", () => {
     if (!p1) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      forecast: RoundResult.WIN,
+      forecast: RoundResult.ANSWER_A,
       playerId: p1.id,
     });
-    game.execute(endRound, { roundResult: RoundResult.WIN });
+    game.execute(endRound, { roundResult: RoundResult.ANSWER_A });
     expect(game.state.players[p1.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE
     );
@@ -59,15 +59,15 @@ describe("endRound", () => {
     if (!p1 || !p2) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      forecast: RoundResult.WIN,
+      forecast: RoundResult.ANSWER_A,
       playerId: p1.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 300,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: p2.id,
     });
-    game.execute(endRound, { roundResult: RoundResult.WIN });
+    game.execute(endRound, { roundResult: RoundResult.ANSWER_A });
     expect(game.state.players[p1.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE + 300
     );
@@ -80,20 +80,20 @@ describe("endRound", () => {
     if (!p1 || !p2 || !p3) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: p1.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 300,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: p2.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 400,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: p3.id,
     });
-    game.execute(endRound, { roundResult: RoundResult.WIN });
+    game.execute(endRound, { roundResult: RoundResult.ANSWER_A });
     expect(game.state.players[p1.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE
     );
@@ -109,20 +109,20 @@ describe("endRound", () => {
     if (!p1 || !p2 || !p3) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      forecast: RoundResult.WIN,
+      forecast: RoundResult.ANSWER_A,
       playerId: p1.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 300,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: p2.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 400,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: p3.id,
     });
-    game.execute(endRound, { roundResult: RoundResult.WIN });
+    game.execute(endRound, { roundResult: RoundResult.ANSWER_A });
     expect(game.state.players[p1.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE + 700
     );
@@ -138,20 +138,20 @@ describe("endRound", () => {
     if (!p1 || !p2 || !p3) throw "player is missing for test";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 100,
-      forecast: RoundResult.WIN,
+      forecast: RoundResult.ANSWER_A,
       playerId: p1.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      forecast: RoundResult.WIN,
+      forecast: RoundResult.ANSWER_A,
       playerId: p2.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 600,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: p3.id,
     });
-    game.execute(endRound, { roundResult: RoundResult.WIN });
+    game.execute(endRound, { roundResult: RoundResult.ANSWER_A });
     expect(game.state.players[p1.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE + 200
     );

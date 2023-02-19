@@ -14,7 +14,7 @@ interface Props {
 }
 
 function win(bet: Bet | undefined) {
-  return bet?.expectedResult === RoundResult.WIN;
+  return bet?.expectedResult === RoundResult.ANSWER_A;
 }
 
 const Content = styled.div`
@@ -61,10 +61,10 @@ const VerticalLine = styled.div`
 
 const Bets: FC<Props> = ({ game }) => {
   const totalWin = Object.values(game.currentRound?.bets || {})
-    .filter((bet) => bet.expectedResult === RoundResult.WIN)
+    .filter((bet) => bet.expectedResult === RoundResult.ANSWER_A)
     .reduce((memo, bet) => memo + bet.amountCents, 0);
   const totalLose = Object.values(game.currentRound?.bets || {})
-    .filter((bet) => bet.expectedResult === RoundResult.LOSE)
+    .filter((bet) => bet.expectedResult === RoundResult.ANSWER_B)
     .reduce((memo, bet) => memo + bet.amountCents, 0);
   return (
     <Content>

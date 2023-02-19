@@ -18,8 +18,8 @@ export enum RoundStatus {
 }
 
 export enum RoundResult {
-  WIN = "WIN",
-  LOSE = "LOSE",
+  ANSWER_A = "ANSWER_A",
+  ANSWER_B = "ANSWER_B",
 }
 
 export interface Round {

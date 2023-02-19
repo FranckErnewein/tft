@@ -30,12 +30,12 @@ describe("playerBet", () => {
     if (!player) throw "player not found";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 200,
-      forecast: RoundResult.WIN,
+      forecast: RoundResult.ANSWER_A,
       playerId: player.id,
     });
     expect(game.state.currentRound?.bets[player.id].amountCents).toBe(200);
     expect(game.state.currentRound?.bets[player.id].expectedResult).toBe(
-      RoundResult.WIN
+      RoundResult.ANSWER_A
     );
     expect(game.state.players[player.id]?.balanceCents).toBe(800);
   });
@@ -45,7 +45,7 @@ describe("playerBet", () => {
       if (!player) throw "player not found";
       game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
         amountCents: 1200,
-        forecast: RoundResult.WIN,
+        forecast: RoundResult.ANSWER_A,
         playerId: player.id,
       });
     }).toThrow(GameError);
@@ -55,17 +55,17 @@ describe("playerBet", () => {
     if (!player) throw "player not found";
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 800,
-      forecast: RoundResult.WIN,
+      forecast: RoundResult.ANSWER_A,
       playerId: player.id,
     });
     game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
       amountCents: 400,
-      forecast: RoundResult.LOSE,
+      forecast: RoundResult.ANSWER_B,
       playerId: player.id,
     });
     expect(game.state.currentRound?.bets[player.id].amountCents).toBe(400);
     expect(game.state.currentRound?.bets[player.id].expectedResult).toBe(
-      RoundResult.LOSE
+      RoundResult.ANSWER_B
     );
     expect(game.state.players[player.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE - 400
@@ -83,7 +83,7 @@ describe("playerBet", () => {
       if (!player) throw "player not found";
       game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
         amountCents: 200,
-        forecast: RoundResult.WIN,
+        forecast: RoundResult.ANSWER_A,
         playerId: player.id,
       });
     };
@@ -100,7 +100,7 @@ describe("playerBet", () => {
       if (!player) throw "player not found";
       game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
         amountCents: 200,
-        forecast: RoundResult.WIN,
+        forecast: RoundResult.ANSWER_A,
         playerId: player.id,
       });
     };

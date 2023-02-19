@@ -54,19 +54,19 @@ const mock: Game = {
     bets: {
       b: {
         amountCents: 130,
-        expectedResult: RoundResult.LOSE,
+        expectedResult: RoundResult.ANSWER_B,
       },
       c: {
         amountCents: 200,
-        expectedResult: RoundResult.WIN,
+        expectedResult: RoundResult.ANSWER_A,
       },
       d: {
         amountCents: 550,
-        expectedResult: RoundResult.WIN,
+        expectedResult: RoundResult.ANSWER_A,
       },
       f: {
         amountCents: 50,
-        expectedResult: RoundResult.LOSE,
+        expectedResult: RoundResult.ANSWER_B,
       },
     },
   },
@@ -77,23 +77,23 @@ const mock: Game = {
       endedAt: "2023-02-03T08:23:29.553Z",
       status: RoundStatus.OVER,
       betEndTimer: 0,
-      result: RoundResult.WIN,
+      result: RoundResult.ANSWER_A,
       bets: {
         b: {
           amountCents: 130,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
         c: {
           amountCents: 200,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         d: {
           amountCents: 150,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         f: {
           amountCents: 50,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
       },
     },
@@ -103,19 +103,19 @@ const mock: Game = {
       endedAt: "2023-02-03T08:23:29.553Z",
       status: RoundStatus.OVER,
       betEndTimer: 0,
-      result: RoundResult.WIN,
+      result: RoundResult.ANSWER_A,
       bets: {
         b: {
           amountCents: 130,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
         d: {
           amountCents: 150,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         f: {
           amountCents: 50,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
       },
     },
@@ -125,23 +125,23 @@ const mock: Game = {
       endedAt: "2023-02-03T08:23:29.553Z",
       status: RoundStatus.OVER,
       betEndTimer: 0,
-      result: RoundResult.LOSE,
+      result: RoundResult.ANSWER_B,
       bets: {
         b: {
           amountCents: 130,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
         c: {
           amountCents: 200,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         d: {
           amountCents: 150,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         f: {
           amountCents: 50,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
       },
     },

@@ -8,7 +8,7 @@ import { timestamp, createValidator } from "../utils";
 const schema = {
   properties: {
     amountCents: { type: "uint16" },
-    forecast: { enum: [RoundResult.WIN, RoundResult.LOSE] },
+    forecast: { enum: [RoundResult.ANSWER_A, RoundResult.ANSWER_B] },
     playerId: { type: "string" },
   },
 } as const;

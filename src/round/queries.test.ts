@@ -7,7 +7,7 @@ const defaultRound = {
   endedAt: "2023-02-14T17:07:03.798Z",
   status: RoundStatus.OVER,
   betEndTimer: 0,
-  result: RoundResult.WIN,
+  result: RoundResult.ANSWER_A,
   bets: {},
 };
 
@@ -23,7 +23,7 @@ describe("roundResultForPlayer", () => {
       bets: {
         b: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
       },
     };
@@ -36,7 +36,7 @@ describe("roundResultForPlayer", () => {
       bets: {
         a: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
       },
     };
@@ -49,11 +49,11 @@ describe("roundResultForPlayer", () => {
       bets: {
         a: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         b: {
           amountCents: 100,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
       },
     };
@@ -66,15 +66,15 @@ describe("roundResultForPlayer", () => {
       bets: {
         a: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         b: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         c: {
           amountCents: 100,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
       },
     };
@@ -87,15 +87,15 @@ describe("roundResultForPlayer", () => {
       bets: {
         a: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         b: {
           amountCents: 100,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
         c: {
           amountCents: 100,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
       },
     };
@@ -108,15 +108,15 @@ describe("roundResultForPlayer", () => {
       bets: {
         a: {
           amountCents: 100,
-          expectedResult: RoundResult.LOSE,
+          expectedResult: RoundResult.ANSWER_B,
         },
         b: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
         c: {
           amountCents: 100,
-          expectedResult: RoundResult.WIN,
+          expectedResult: RoundResult.ANSWER_A,
         },
       },
     };

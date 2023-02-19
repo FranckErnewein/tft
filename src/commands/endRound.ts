@@ -6,7 +6,7 @@ import { timestamp, createValidator } from "../utils";
 
 const schema = {
   properties: {
-    roundResult: { enum: [RoundResult.WIN, RoundResult.LOSE] },
+    roundResult: { enum: [RoundResult.ANSWER_A, RoundResult.ANSWER_B] },
   },
 } as const;
 
