@@ -47,10 +47,6 @@ export interface RoundStarted extends BaseEvent {
   };
 }
 
-export interface BetTimeStarted extends BaseEvent {
-  type: EventType.BET_TIME_STARTED;
-}
-
 export interface PlayerBet extends BaseEvent {
   type: EventType.PLAYER_BET;
   payload: {
@@ -82,7 +78,6 @@ export type GameEvent =
   | PlayerJoined
   | PlayerLeft
   | RoundStarted
-  | BetTimeStarted
   | PlayerBet
   | BetTimeDecreased
   | BetTimeEnded
