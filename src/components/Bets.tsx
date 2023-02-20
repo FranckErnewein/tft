@@ -74,24 +74,26 @@ const Bets: FC<Props> = ({ game }) => {
           <Timer time={game.currentRound.betEndTimer} />
         )}
       <Box>
-        <Grid container>
-          <Grid item xs={6} textAlign="left">
-            <Typography variant="overline" color="secondary">
-              Total for lose
-            </Typography>
-            <Typography variant="h3" color="secondary">
-              {displayAmount(totalLose)}
-            </Typography>
+        {game.currentRound && (
+          <Grid container>
+            <Grid item xs={6} textAlign="left">
+              <Typography variant="overline" color="secondary">
+                Total for {game.currentRound.answerB}
+              </Typography>
+              <Typography variant="h3" color="secondary">
+                {displayAmount(totalLose)}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} textAlign="right">
+              <Typography variant="overline" color="primary">
+                Total for {game.currentRound.answerA}
+              </Typography>
+              <Typography variant="h3" color="primary">
+                {displayAmount(totalWin)}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={6} textAlign="right">
-            <Typography variant="overline" color="primary">
-              Total for win
-            </Typography>
-            <Typography variant="h3" color="primary">
-              {displayAmount(totalWin)}
-            </Typography>
-          </Grid>
-        </Grid>
+        )}
       </Box>
       {game.currentRound &&
         Object.values(game.players).map((player: Player) => {

@@ -17,7 +17,7 @@ const PlayerList: FC<Props> = ({ players }) => {
     <List>
       {Object.values(players).map((player: Player) => {
         return (
-          <ListItem>
+          <ListItem key={player.id}>
             <ListItemAvatar>
               <Avatar>{player.name[0]}</Avatar>
             </ListItemAvatar>
