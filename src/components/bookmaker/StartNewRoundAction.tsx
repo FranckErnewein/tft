@@ -1,10 +1,4 @@
-import {
-  FC,
-  useState,
-  useEffect,
-  ChangeEvent,
-  ChangeEventHandler,
-} from "react";
+import { FC, useState, useEffect, ChangeEvent } from "react";
 import { useCookie } from "react-use";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";

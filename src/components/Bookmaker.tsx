@@ -4,16 +4,15 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 
-import { Game, RoundStatus, RoundResult } from "../state";
+import { Game, RoundStatus } from "../state";
 import createCommandButton from "./createCommandButton";
 import startGame from "../commands/startGame";
-import endRound from "../commands/endRound";
 import PlayerList from "./PlayerList";
 import ScheduleEndBetAction from "./bookmaker/ScheduleEndBetAction";
 import StartNewRoundAction from "./bookmaker/StartNewRoundAction";
+import EndRoundAction from "./bookmaker/EndRoundAction";
 
 const StartGameButton = createCommandButton(startGame);
-const EndRoundButton = createCommandButton(endRound);
 
 const Bookmaker: FC<Game> = (game) => {
   let status = "";
@@ -35,20 +34,8 @@ const Bookmaker: FC<Game> = (game) => {
       game.currentRound.betEndTimer > 0;
     action = <ScheduleEndBetAction disabled={disabled} />;
   } else if (game.currentRound.status === RoundStatus.RUNNING) {
-    status = "Bet time over. how did it end ?";
-    action = (
-      <>
-        <EndRoundButton
-          color="secondary"
-          options={{ roundResult: RoundResult.ANSWER_B }}
-        >
-          Round lost
-        </EndRoundButton>
-        <EndRoundButton options={{ roundResult: RoundResult.ANSWER_A }}>
-          Round won
-        </EndRoundButton>
-      </>
-    );
+    status = "Bet time over. time to close the bet.";
+    action = <EndRoundAction {...game.currentRound} />;
   }
   return (
     <>
@@ -67,9 +54,7 @@ const Bookmaker: FC<Game> = (game) => {
               <br />
               <Typography variant="body1">{status}</Typography>
               <br />
-              <Box display="flex" justifyContent="space-between">
-                {action}
-              </Box>
+              <Box>{action}</Box>
             </Grid>
             <Grid item xs={2} />
             <Grid item xs={4}>
