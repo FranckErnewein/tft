@@ -53,6 +53,9 @@ export const onRoundStarted: Reducer<RoundStarted> = (state, event): Game => {
     status: RoundStatus.BET_TIME,
     betEndTimer: null,
     result: null,
+    question: event.payload.question,
+    answerA: event.payload.answerA,
+    answerB: event.payload.answerB,
     bets: {},
   };
   return {

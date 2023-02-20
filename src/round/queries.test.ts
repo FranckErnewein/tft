@@ -7,6 +7,9 @@ const defaultRound = {
   endedAt: "2023-02-14T17:07:03.798Z",
   status: RoundStatus.OVER,
   betEndTimer: 0,
+  question: "will the player win or lose the next round ?",
+  answerA: "win",
+  answerB: "lose",
   result: RoundResult.ANSWER_A,
   bets: {},
 };

@@ -44,6 +44,9 @@ export interface RoundStarted extends BaseEvent {
   type: EventType.ROUND_STARTED;
   payload: {
     roundId: string;
+    question: string;
+    answerA: string;
+    answerB: string;
   };
 }
 
