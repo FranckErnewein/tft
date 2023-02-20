@@ -7,13 +7,12 @@ import Paper from "@mui/material/Paper";
 import { Game, RoundStatus, RoundResult } from "../state";
 import createCommandButton from "./createCommandButton";
 import startGame from "../commands/startGame";
-import startRound from "../commands/startRound";
 import endRound from "../commands/endRound";
-import ScheduleEndBetAction from "./ScheduleEndBetAction";
 import PlayerList from "./PlayerList";
+import ScheduleEndBetAction from "./bookmaker/ScheduleEndBetAction";
+import StartNewRoundAction from "./bookmaker/StartNewRoundAction";
 
 const StartGameButton = createCommandButton(startGame);
-const StartRoundButton = createCommandButton(startRound);
 const EndRoundButton = createCommandButton(endRound);
 
 const Bookmaker: FC<Game> = (game) => {
@@ -24,7 +23,7 @@ const Bookmaker: FC<Game> = (game) => {
     action = <StartGameButton>Start a new game</StartGameButton>;
   } else if (!game.currentRound) {
     status = "Waiting for new round.";
-    action = <StartRoundButton>Start a new round</StartRoundButton>;
+    action = <StartNewRoundAction />;
   } else if (game.currentRound.status === RoundStatus.BET_TIME) {
     status = "Player are betting... ";
     if (game.currentRound.betEndTimer && game.currentRound.betEndTimer > 0)

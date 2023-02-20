@@ -16,9 +16,9 @@ export type Options = JTDDataType<typeof schema> | undefined;
 const validate = createValidator<Options>(schema);
 
 export const defaultOptions: Required<Options> = {
-  question: "will the player win or lose the next round ?",
-  answerA: "win",
-  answerB: "lose",
+  question: "Will the player win or lose the next round ?",
+  answerA: "Win",
+  answerB: "Lose",
 };
 
 const startRound: Command<Options> = (_, options): RoundStarted => {

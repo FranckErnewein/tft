@@ -7,9 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import MoreTimeIcon from "@mui/icons-material/MoreTime";
 
-import scheduleEndBet, { Options } from "../commands/scheduleEndBet";
-import endBet from "../commands/endBet";
-import createCommandButton from "./createCommandButton";
+import scheduleEndBet, { Options } from "../../commands/scheduleEndBet";
+import endBet from "../../commands/endBet";
+import createCommandButton from "../createCommandButton";
 
 const ScheduleEndBetButton = createCommandButton<Options>(scheduleEndBet);
 const EndBetButton = createCommandButton(endBet);
