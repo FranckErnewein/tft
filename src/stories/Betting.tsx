@@ -50,6 +50,9 @@ const mock: Game = {
     endedAt: null,
     status: RoundStatus.BET_TIME,
     betEndTimer: 20000,
+    question: "win or lose ?",
+    answerA: "win",
+    answerB: "lose",
     result: null,
     bets: {
       b: {
@@ -78,6 +81,9 @@ const mock: Game = {
       status: RoundStatus.OVER,
       betEndTimer: 0,
       result: RoundResult.ANSWER_A,
+      question: "win or lose ?",
+      answerA: "win",
+      answerB: "lose",
       bets: {
         b: {
           amountCents: 130,
@@ -104,6 +110,10 @@ const mock: Game = {
       status: RoundStatus.OVER,
       betEndTimer: 0,
       result: RoundResult.ANSWER_A,
+
+      question: "win or lose ?",
+      answerA: "win",
+      answerB: "lose",
       bets: {
         b: {
           amountCents: 130,
@@ -126,6 +136,9 @@ const mock: Game = {
       status: RoundStatus.OVER,
       betEndTimer: 0,
       result: RoundResult.ANSWER_B,
+      question: "who will win ?",
+      answerA: "pkayer 1",
+      answerB: "pkayer 2",
       bets: {
         b: {
           amountCents: 130,
