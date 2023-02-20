@@ -39,7 +39,7 @@ const RoundHistory: FC<Props> = ({ game }) => {
       </Button>
       <Drawer open={open} onClose={() => setOpen(false)} anchor="left">
         <Box minWidth="300px">
-          <List>
+          <List dense>
             {game.pastRounds.map((round: Round) => {
               const diffCents = roundResultForPlayer(round, playerId);
               let icon = <ArrowForwardIcon />;
@@ -53,8 +53,10 @@ const RoundHistory: FC<Props> = ({ game }) => {
                 <ListItem dense>
                   <ListItemIcon>{icon}</ListItemIcon>
                   <ListItemText
-                    primary={displayAmount(diffCents)}
-                    secondary={`${winnersCount} winners / ${betsCount} bets`}
+                    primary={round.question}
+                    secondary={`${displayAmount(
+                      diffCents
+                    )} / ${winnersCount} winners / ${betsCount} bets`}
                   />
                 </ListItem>
               );
