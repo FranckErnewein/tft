@@ -27,6 +27,9 @@ const playerBet: Command<Options> = (state, options: Options): PlayerBet => {
   if (!state.players[options.playerId]) {
     throw new GameError(`player not found`);
   }
+  if (options.amountCents === 0) {
+    throw new GameError(`0 is not a valid amount for betting`);
+  }
   const existingBetAmount =
     state.currentRound?.bets[options.playerId]?.amountCents || 0;
   if (

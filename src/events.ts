@@ -9,6 +9,7 @@ export enum EventType {
   BET_TIME_DECREASED = "BET_TIME_DECREASED",
   BET_TIME_ENDED = "BET_TIME_ENDED",
   PLAYER_BET = "PLAYER_BET",
+  PLAYER_CANCEL_BET = "PLAYER_CANCEL_BET",
   ROUND_OVER = "ROUND_OVER",
   GAME_OVER = "GAME_OVER",
 }
@@ -58,6 +59,13 @@ export interface PlayerBet extends BaseEvent {
   };
 }
 
+export interface PlayerCancelBet extends BaseEvent {
+  type: EventType.PLAYER_CANCEL_BET;
+  payload: {
+    playerId: string;
+  };
+}
+
 export interface BetTimeDecreased extends BaseEvent {
   type: EventType.BET_TIME_DECREASED;
   payload: {
@@ -82,6 +90,7 @@ export type GameEvent =
   | PlayerLeft
   | RoundStarted
   | PlayerBet
+  | PlayerCancelBet
   | BetTimeDecreased
   | BetTimeEnded
   | RoundOver;

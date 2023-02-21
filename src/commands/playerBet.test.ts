@@ -72,6 +72,17 @@ describe("playerBet", () => {
     );
   });
 
+  it("should reject bet when amount is 0", () => {
+    expect(() => {
+      if (!player) return;
+      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+        amountCents: 0,
+        forecast: RoundResult.ANSWER_A,
+        playerId: player.id,
+      });
+    }).toThrow(GameError);
+  });
+
   it("should reject bet because game is not in bet phase", () => {
     game.execute<GameStarted>(startGame); //reset game
     const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {

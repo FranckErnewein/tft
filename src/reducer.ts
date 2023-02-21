@@ -6,6 +6,7 @@ import {
   PlayerLeft,
   RoundStarted,
   PlayerBet,
+  PlayerCancelBet,
   BetTimeDecreased,
   BetTimeEnded,
   RoundOver,
@@ -86,6 +87,33 @@ export const onPlayerBet: Reducer<PlayerBet> = (state, event): Game => {
         ...state.currentRound?.bets,
         [playerId]: event.payload.bet,
       },
+    },
+  };
+};
+
+export const onPlayerCancelBet: Reducer<PlayerCancelBet> = (
+  state,
+  event
+): Game => {
+  const { playerId } = event.payload;
+  const { currentRound, players } = state;
+  if (!currentRound) throw new StateError("no current round");
+  const bet = currentRound.bets[playerId];
+  if (!bet) return state;
+  const player = players[playerId];
+  const { [playerId]: toDelete, ...rest } = currentRound.bets;
+  return {
+    ...state,
+    players: {
+      ...players,
+      [playerId]: {
+        ...player,
+        balanceCents: player.balanceCents + bet.amountCents,
+      },
+    },
+    currentRound: {
+      ...currentRound,
+      bets: rest,
     },
   };
 };
@@ -176,6 +204,8 @@ export default function reducer(state: Game, event: GameEvent): Game {
       return onRoundStarted(state, event);
     case EventType.PLAYER_BET:
       return onPlayerBet(state, event);
+    case EventType.PLAYER_CANCEL_BET:
+      return onPlayerCancelBet(state, event);
     case EventType.BET_TIME_DECREASED:
       return onBetTimeDecreased(state, event);
     case EventType.BET_TIME_ENDED:
