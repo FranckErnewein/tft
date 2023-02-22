@@ -21,7 +21,7 @@ const AnimatedAmount: FC<Props> = ({ amountCents }) => {
     const startTime = Date.now();
     const startAmount = prevAmountCents.current || 0;
     const delta = -1 * startAmount + amountCents;
-    const animationDuration = 350;
+    const animationDuration = 200;
 
     const loop = () => {
       const deltaTime = Date.now() - startTime;
