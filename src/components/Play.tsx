@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { useDebounce } from "react-use";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -27,6 +28,7 @@ interface Props {
 
 const Play: FC<Props> = ({ game }) => {
   const { currentRound, players } = game;
+  const wideScreen = useMediaQuery("(min-width:650px)");
   const { mutate: bet } = useCommand<PlayerBetOptions, PlayerBet>(playerBet);
   const { mutate: cancel } = useCommand<
     PlayerCancelBetOptions,
@@ -86,16 +88,16 @@ const Play: FC<Props> = ({ game }) => {
     <>
       <Box textAlign="center">
         <Grid container>
-          <Grid item xs={2} textAlign="left">
+          <Grid item xs={4} textAlign="left">
             <RoundHistoryPanel game={game} />
           </Grid>
-          <Grid item xs={8} textAlign="center">
+          <Grid item xs={4} textAlign="center">
             <Typography variant="caption">your balance</Typography>
             <Typography variant="h4">
               <AnimatedAmount amountCents={player.balanceCents} />
             </Typography>
           </Grid>
-          <Grid item xs={2} textAlign="right">
+          <Grid item xs={4} textAlign="right">
             <PlayerListPanel game={game} />
           </Grid>
         </Grid>
@@ -147,39 +149,41 @@ const Play: FC<Props> = ({ game }) => {
             max={500}
           />
         </Box>
-        <Grid container>
-          <Grid item xs={5} textAlign="left">
-            <ButtonGroup
-              variant="outlined"
-              color="secondary"
-              disabled={!isBetTime}
-            >
-              <Button onClick={() => increaseValue(-100)}>+1€</Button>
-              <Button onClick={() => increaseValue(-50)}>+0.50€</Button>
-              <Button onClick={() => increaseValue(-10)}>+0.10€</Button>
-            </ButtonGroup>
+        {wideScreen && (
+          <Grid container>
+            <Grid item xs={5} textAlign="left">
+              <ButtonGroup
+                variant="outlined"
+                color="secondary"
+                disabled={!isBetTime}
+              >
+                <Button onClick={() => increaseValue(-100)}>+1€</Button>
+                <Button onClick={() => increaseValue(-50)}>+0.50€</Button>
+                <Button onClick={() => increaseValue(-10)}>+0.10€</Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid item xs={2} textAlign="center">
+              <Button
+                variant="outlined"
+                onClick={() => setSliderValues([0, 0])}
+                disabled={!isBetTime}
+              >
+                Reset 0€
+              </Button>
+            </Grid>
+            <Grid item xs={5} textAlign="right">
+              <ButtonGroup
+                variant="outlined"
+                color="primary"
+                disabled={!isBetTime}
+              >
+                <Button onClick={() => increaseValue(10)}>+0.10€</Button>
+                <Button onClick={() => increaseValue(50)}>+0.50€</Button>
+                <Button onClick={() => increaseValue(100)}>+1€</Button>
+              </ButtonGroup>
+            </Grid>
           </Grid>
-          <Grid item xs={2} textAlign="center">
-            <Button
-              variant="outlined"
-              onClick={() => setSliderValues([0, 0])}
-              disabled={!isBetTime}
-            >
-              Reset 0€
-            </Button>
-          </Grid>
-          <Grid item xs={5} textAlign="right">
-            <ButtonGroup
-              variant="outlined"
-              color="primary"
-              disabled={!isBetTime}
-            >
-              <Button onClick={() => increaseValue(10)}>+0.10€</Button>
-              <Button onClick={() => increaseValue(50)}>+0.50€</Button>
-              <Button onClick={() => increaseValue(100)}>+1€</Button>
-            </ButtonGroup>
-          </Grid>
-        </Grid>
+        )}
         {!isBetTime && currentRound && (
           <Typography variant="overline">Fighting now</Typography>
         )}

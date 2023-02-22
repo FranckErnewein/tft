@@ -18,12 +18,12 @@ const Layout: FC<Props> = ({ game }) => {
     <Container className="App">
       <AppBar>
         <Grid container>
-          <Grid item xs={8}>
+          <Grid item xs={4}>
             <Typography variant="h5" component="h1" sx={{ flexGrow: 1, p: 1 }}>
               Minibet
             </Typography>
           </Grid>
-          <Grid item xs={4} textAlign="right">
+          <Grid item xs={8} textAlign="right">
             <PlayerMenu game={game} />
           </Grid>
         </Grid>
