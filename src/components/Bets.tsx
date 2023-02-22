@@ -6,6 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Timer from "./Timer";
+import AnimatedAmount from "./AnimatedAmount";
 import { Game, RoundResult, Player, Bet } from "../state";
 import { displayAmount } from "../utils";
 
@@ -35,6 +36,7 @@ const Bar = styled.div<Bet>`
   width: ${(props) => ((props.amountCents / 1000) * 100) / 2}%;
   ${(props) => (win(props) ? "left" : "right")}: 50%;
   background-color: ${(props) => (win(props) ? "blue" : "purple")};
+  transition: width 200ms;
 `;
 
 const AvatarContent = styled.div`
@@ -81,7 +83,7 @@ const Bets: FC<Props> = ({ game }) => {
                 Total for {game.currentRound.answerB}
               </Typography>
               <Typography variant="h3" color="secondary">
-                {displayAmount(totalLose)}
+                <AnimatedAmount amountCents={totalLose} />
               </Typography>
             </Grid>
             <Grid item xs={6} textAlign="right">
@@ -89,7 +91,7 @@ const Bets: FC<Props> = ({ game }) => {
                 Total for {game.currentRound.answerA}
               </Typography>
               <Typography variant="h3" color="primary">
-                {displayAmount(totalWin)}
+                <AnimatedAmount amountCents={totalWin} />
               </Typography>
             </Grid>
           </Grid>

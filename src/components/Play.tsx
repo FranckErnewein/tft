@@ -18,6 +18,7 @@ import playerCancelBet, {
 import Bets from "./Bets";
 import RoundHistoryPanel from "./RoundHistoryPanel";
 import PlayerListPanel from "./PlayerListPanel";
+import AnimatedAmount from "./AnimatedAmount";
 
 interface Props {
   game: Game;
@@ -88,7 +89,7 @@ const Play: FC<Props> = ({ game }) => {
           <Grid item xs={8} textAlign="center">
             <Typography variant="caption">your balance</Typography>
             <Typography variant="h4">
-              {displayAmount(player.balanceCents)}
+              <AnimatedAmount amountCents={player.balanceCents} />
             </Typography>
           </Grid>
           <Grid item xs={2} textAlign="right">

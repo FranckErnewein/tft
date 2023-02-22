@@ -6,6 +6,7 @@ import JoinGame from "./components/JoinGame";
 import Play from "./components/Play";
 import DumpState from "./components/DumpState";
 import Betting from "./stories/Betting";
+import AnimatedAmountStory from "./stories/AnimatedAmountStory";
 
 function App() {
   const game = useGame();
@@ -18,6 +19,7 @@ function App() {
         <Route path="player/:playerId" element={<Play game={game} />} />
         <Route path="story">
           <Route path="betting/:playerId" element={<Betting />} />
+          <Route path="animated-amount" element={<AnimatedAmountStory />} />
         </Route>
         <Route path="debug">
           <Route path="state" element={<DumpState game={game} />} />
