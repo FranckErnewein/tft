@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
+import { useDebounce } from "react-use";
 import Slider from "@mui/material/Slider";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
@@ -52,14 +53,18 @@ const Play: FC<Props> = ({ game }) => {
     };
   }, [player]);
 
-  useEffect(() => {
-    if (playerId) {
-      const [value] = sliderValues;
-      value === 0
-        ? cancel({ playerId })
-        : bet({ forecast, playerId, amountCents: Math.abs(sliderValues[0]) });
-    }
-  }, [sliderValues]);
+  useDebounce(
+    () => {
+      if (playerId) {
+        const [value] = sliderValues;
+        value === 0
+          ? cancel({ playerId })
+          : bet({ forecast, playerId, amountCents: Math.abs(value) });
+      }
+    },
+    100,
+    [sliderValues]
+  );
 
   if (!playerId) return <Navigate to="/" />;
   if (!player) {
@@ -73,10 +78,8 @@ const Play: FC<Props> = ({ game }) => {
   const color = forecast === RoundResult.ANSWER_A ? "primary" : "secondary";
   const isBetTime = currentRound?.status === RoundStatus.BET_TIME;
   const marks = [...Array(21).keys()].map((i) => {
-    return {
-      value: i * 100 - 1000,
-      label: displayAmount(Math.abs(i - 10)),
-    };
+    const value = i * 100 - 1000;
+    return { value, label: displayAmount(Math.abs(value)) };
   });
 
   return (
