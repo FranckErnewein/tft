@@ -1,5 +1,4 @@
 import { StateMachine, Player, RoundResult } from "../state";
-import { GameError } from "../errors";
 import { DEFAULT_PLAYER_BALANCE } from "../constants";
 import {
   GameStarted,

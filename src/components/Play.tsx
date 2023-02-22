@@ -10,8 +10,11 @@ import Typography from "@mui/material/Typography";
 import { Game, RoundResult, RoundStatus } from "../state";
 import { displayAmount } from "../utils";
 import { useCommand } from "../hooks";
-import { PlayerBet } from "../events";
+import { PlayerBet, PlayerCancelBet } from "../events";
 import playerBet, { Options as PlayerBetOptions } from "../commands/playerBet";
+import playerCancelBet, {
+  Options as PlayerCancelBetOptions,
+} from "../commands/playerCancelBet";
 import Bets from "./Bets";
 import RoundHistoryPanel from "./RoundHistoryPanel";
 import PlayerListPanel from "./PlayerListPanel";
@@ -23,12 +26,18 @@ interface Props {
 const Play: FC<Props> = ({ game }) => {
   const { currentRound, players } = game;
   const { mutate: bet } = useCommand<PlayerBetOptions, PlayerBet>(playerBet);
+  const { mutate: cancel } = useCommand<
+    PlayerCancelBetOptions,
+    PlayerCancelBet
+  >(playerCancelBet);
   const navigate = useNavigate();
   const [sliderValues, setSliderValues] = useState<number[]>([0, 0]);
   const increaseValue = (incr: number) =>
     setSliderValues([sliderValues[0] + incr, 0]);
   const { playerId } = useParams();
   const player = playerId ? players[playerId] : null;
+  const forecast =
+    sliderValues[0] > 0 ? RoundResult.ANSWER_A : RoundResult.ANSWER_B;
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -42,6 +51,15 @@ const Play: FC<Props> = ({ game }) => {
     };
   }, [player]);
 
+  useEffect(() => {
+    if (playerId) {
+      const [value] = sliderValues;
+      value === 0
+        ? cancel({ playerId })
+        : bet({ forecast, playerId, amountCents: Math.abs(sliderValues[0]) });
+    }
+  }, [sliderValues]);
+
   if (!playerId) return <Navigate to="/" />;
   if (!player) {
     return (
@@ -51,18 +69,12 @@ const Play: FC<Props> = ({ game }) => {
     );
   }
 
-  const betOptions: PlayerBetOptions = {
-    amountCents: Math.abs(sliderValues[0]),
-    forecast: sliderValues[0] > 0 ? RoundResult.ANSWER_A : RoundResult.ANSWER_B,
-    playerId,
-  };
-  const color =
-    betOptions.forecast === RoundResult.ANSWER_A ? "primary" : "secondary";
+  const color = forecast === RoundResult.ANSWER_A ? "primary" : "secondary";
   const isBetTime = currentRound?.status === RoundStatus.BET_TIME;
   const marks = [...Array(21).keys()].map((i) => {
     return {
       value: i * 100 - 1000,
-      label: Math.abs(i - 10) + "€",
+      label: displayAmount(Math.abs(i - 10)),
     };
   });
 
@@ -164,18 +176,6 @@ const Play: FC<Props> = ({ game }) => {
             </ButtonGroup>
           </Grid>
         </Grid>
-        {isBetTime && (
-          <Box mt={3}>
-            <Button
-              variant="contained"
-              color={color}
-              disabled={betOptions.amountCents === 0}
-              onClick={() => bet(betOptions)}
-            >
-              Bet
-            </Button>
-          </Box>
-        )}
         {!isBetTime && currentRound && (
           <Typography variant="overline">Fighting now</Typography>
         )}
