@@ -19,10 +19,10 @@ const EndRoundAction: FC<Round> = ({ question, answerA, answerB }) => {
           color="secondary"
           options={{ roundResult: RoundResult.ANSWER_B }}
         >
-          {answerA}
+          {answerB}
         </EndRoundButton>
         <EndRoundButton options={{ roundResult: RoundResult.ANSWER_A }}>
-          {answerB}
+          {answerA}
         </EndRoundButton>
       </Box>
     </>

@@ -48,7 +48,7 @@ const StartNewRoundAction: FC<Props> = () => {
 
   return (
     <Box>
-      <Stack p={1}>
+      <Stack py={1}>
         <TextField
           label="Question"
           variant="outlined"
@@ -56,23 +56,25 @@ const StartNewRoundAction: FC<Props> = () => {
           onChange={setQuestion}
         />
       </Stack>
-      <Grid container spacing={1} p={1}>
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            label="Answer A"
-            variant="outlined"
-            value={answerA}
-            onChange={setAnswerA}
-          />
-        </Grid>
+      <Grid container spacing={2} py={1}>
         <Grid item xs={6}>
           <TextField
             fullWidth
             label="Answer B"
             variant="outlined"
+            color="secondary"
             value={answerB}
             onChange={setAnswerB}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            label="Answer A"
+            color="primary"
+            variant="outlined"
+            value={answerA}
+            onChange={setAnswerA}
           />
         </Grid>
       </Grid>
