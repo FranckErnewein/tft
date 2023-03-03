@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, UseMutateFunction } from "react-query";
+import { useMutation, UseMutateFunction } from "react-query";
 import io from "socket.io-client";
 import reducer from "./reducer";
 import { EMPTY_GAME, Game } from "./state";
@@ -11,31 +11,25 @@ const apiUrl = import.meta.env.VITE_API_URL || "";
 
 export function useGame(): Game {
   const [gameState, setGameState] = useState<Game>(EMPTY_GAME);
-  const [gameLoaded, setGameLoaded] = useState<boolean>(false);
-  useQuery({
-    queryKey: "state",
-    queryFn: () =>
-      fetch(`${apiUrl}/state`).then((r) => r.json()) as Promise<Game>,
-    onSuccess: (data) => {
-      setGameLoaded(true);
-      setGameState(data);
-    },
-    enabled: !gameLoaded,
-  });
 
   useEffect(() => {
-    if (gameLoaded) {
-      const socket = io(apiUrl);
-      let state: Game = gameState;
-      socket.on("gameEvent", (event) => {
-        state = reducer(state, event);
-        setGameState(state);
-      });
-      return () => {
-        socket.close();
-      };
-    }
-  }, [gameLoaded]);
+    const socket = io(apiUrl);
+    let state: Game = gameState;
+    socket.on("gameEvent", (event) => {
+      console.log("receive event", event);
+      state = reducer(state, event);
+      console.log("new state", state);
+      setGameState(state);
+    });
+    socket.on("gameState", (s) => {
+      console.log("reset state", s);
+      state = s;
+      setGameState(state);
+    });
+    return () => {
+      socket.close();
+    };
+  }, []);
   return gameState;
 }
 export type CommandResponsePayload<E = GameEvent> =

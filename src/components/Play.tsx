@@ -35,11 +35,12 @@ const Play: FC<Props> = ({ game }) => {
     PlayerCancelBet
   >(playerCancelBet);
   const navigate = useNavigate();
-  const [sliderValues, setSliderValues] = useState<number[]>([0, 0]);
   const increaseValue = (incr: number) =>
     setSliderValues([sliderValues[0] + incr, 0]);
   const { playerId } = useParams();
   const player = playerId ? players[playerId] : null;
+  const existingBet = playerId ? game.currentRound?.bets[playerId] : null;
+  const [sliderValues, setSliderValues] = useState<number[]>([0, 0]);
   const forecast =
     sliderValues[0] > 0 ? RoundResult.ANSWER_A : RoundResult.ANSWER_B;
 
@@ -57,16 +58,22 @@ const Play: FC<Props> = ({ game }) => {
 
   useDebounce(
     () => {
-      if (playerId) {
-        const [value] = sliderValues;
-        value === 0
-          ? cancel({ playerId })
-          : bet({ forecast, playerId, amountCents: Math.abs(value) });
-      }
+      const [value] = sliderValues;
+      if (value !== 0 && playerId)
+        bet({ forecast, playerId, amountCents: Math.abs(value) });
     },
     100,
     [sliderValues]
   );
+
+  useEffect(() => {
+    if (existingBet && sliderValues[0] === 0) {
+      const initValue =
+        existingBet.amountCents *
+        (existingBet.expectedResult === RoundResult.ANSWER_A ? 1 : -1);
+      setSliderValues([initValue, 0]);
+    }
+  }, [existingBet]);
 
   if (!playerId) return <Navigate to="/" />;
   if (!player) {
@@ -165,7 +172,10 @@ const Play: FC<Props> = ({ game }) => {
             <Grid item xs={2} textAlign="center">
               <Button
                 variant="outlined"
-                onClick={() => setSliderValues([0, 0])}
+                onClick={() => {
+                  setSliderValues([0, 0]);
+                  if (playerId) cancel({ playerId });
+                }}
                 disabled={!isBetTime}
               >
                 Reset 0€

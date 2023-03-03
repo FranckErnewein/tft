@@ -76,9 +76,7 @@ routeAsyncCommand(scheduleEndBet);
 routeCommand(endBet);
 routeCommand(endRound);
 
-app.get("/state", (_, response: Response) => {
-  response.json(game.state);
-});
+io.on("connection", (socket) => socket.emit("gameState", game.state));
 
 app.get("*", function (_, response) {
   response.sendFile(path.join(__dirname, "../dist/index.html"));
