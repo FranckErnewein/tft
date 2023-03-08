@@ -1,10 +1,9 @@
 import { v4 as uuid } from "uuid";
 import { JTDDataType } from "ajv/dist/jtd";
-import { Game } from "../state";
-import { Command } from "../StateMachine";
+import { timestamp, createValidator } from "../../utils";
+import { GameCommand } from "../types";
 import { EventType, PlayerJoined } from "../events";
 import { GameError } from "../errors";
-import { timestamp, createValidator } from "../utils";
 
 const schema = {
   properties: {
@@ -15,7 +14,7 @@ const schema = {
 export type Options = JTDDataType<typeof schema>;
 const validate = createValidator<Options>(schema);
 
-const playerJoin: Command<Game, Options, PlayerJoined> = (game, options) => {
+const playerJoin: GameCommand<Options, PlayerJoined> = (game, options) => {
   validate(options);
   if (!game.id) throw new GameError("no game started");
   Object.keys(game.players)

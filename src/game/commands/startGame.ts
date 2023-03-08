@@ -1,10 +1,9 @@
 import { v4 as uuid } from "uuid";
-import { Command } from "../StateMachine";
-import { Game } from "../state";
+import { GameCommand } from "../types";
 import { EventType, GameStarted } from "../events";
-import { timestamp } from "../utils";
+import { timestamp } from "../../utils";
 
-const startGame: Command<Game, undefined, GameStarted> = () => {
+const startGame: GameCommand<undefined, GameStarted> = () => {
   return {
     type: EventType.GAME_STARTED,
     datetime: timestamp(),

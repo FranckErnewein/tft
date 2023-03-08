@@ -2,6 +2,20 @@ import Ajv from "ajv/dist/jtd";
 import { DefinedError } from "ajv";
 import { CommandOptionError } from "./errors";
 
+export function promisify<T, U>(func: (x: T) => U): (x: T) => Promise<U> {
+  return function (x: T): Promise<U> {
+    return Promise.resolve(func(x));
+  };
+}
+
+export function asFunction<T>(x: T): (...args: any[]) => T {
+  return () => x;
+}
+
+export function identity<T>(): (x: T) => T {
+  return (x) => x;
+}
+
 export function timestamp(d = new Date()): string {
   return d.toISOString();
 }
