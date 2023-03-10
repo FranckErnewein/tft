@@ -1,8 +1,20 @@
-import { AppendEvent, StreamEvents, SaveState, LoadState } from "./types";
+import {
+  AppendEvent,
+  StreamEvents,
+  SaveState,
+  LoadState,
+  ResetState,
+} from "./types";
 import { promisify } from "../utils";
 
 export function createStateStore<S>(defaultState: S) {
   const states: Record<string, S> = {};
+
+  const reset: ResetState<S> = (key: string) =>
+    promisify<undefined, S>(() => {
+      states[key] = defaultState;
+      return defaultState;
+    });
 
   const save: SaveState<S> = (key) =>
     promisify<S, S>((state) => {
@@ -15,7 +27,7 @@ export function createStateStore<S>(defaultState: S) {
       return states[key] || defaultState;
     });
 
-  return { save, load };
+  return { save, load, reset };
 }
 
 export function createEventStore<E>() {
