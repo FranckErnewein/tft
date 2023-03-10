@@ -1,44 +1,55 @@
-import { pipeCommand } from "../StateMachine";
-import { EMPTY_GAME, Game } from "../state";
-import { PlayerJoined, GameEvent } from "../events";
+import { pipeCommand } from "../../pipes";
+import { promisify } from "../../utils";
+import { Game } from "../types";
+import defaultState from "../defaultState";
+import { GameEvent, PlayerJoined } from "../events";
 import reducer from "../reducer";
 import startGame from "./startGame";
-import { createStateStore } from "../stores/inMemory";
-import { promisify, identity } from "../utils";
+// import { createStateStore } from "../stores/inMemory";
 import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
 
+function dumper<T>(toDump: T | null) {
+  return promisify((x: T) => {
+    toDump = x;
+    return x;
+  });
+}
+
 describe("startGame", () => {
-  let state: Game | null = null;
+  let state: Game = defaultState;
   let lastEvent: GameEvent | null = null;
-  const dumpState = promisify((s: Game) => (state = s));
-  const dumpEvent = promisify((e: GameEvent) => (lastEvent = e));
-  let cmdStartGame = pipeCommand<undefined, GameEvent, Game>(
-    EMPTY_GAME,
+  const getState = promisify<undefined, Game>(() => state);
+  const setState = promisify<Game, Game>((s: Game) => (state = s));
+  const setLastEvent = promisify<GameEvent, GameEvent>(
+    (e: GameEvent) => (lastEvent = e)
+  );
+  const cmdStartGame = pipeCommand<undefined, GameEvent, Game>(
+    getState,
     startGame,
-    dumpEvent,
-    reducer
-    dumpState
+    setLastEvent,
+    reducer,
+    setState
   );
-  let cmdPlayerJoin = pipeCommand(
-    EMPTY_GAME,
+  let cmdPlayerJoin = pipeCommand<PlayerJoinOptions, GameEvent, Game>(
+    getState,
     playerJoin,
-    dumpEvent,
-    gameMachine,
-    dumpState
+    dumper<GameEvent>(lastEvent),
+    reducer,
+    dumper<Game>(state)
   );
 
-  beforeEach(() => (state = null));
+  beforeEach(() => (state = defaultState));
 
-  it("should init the game correctly", () => {
-    cmdStartGame(undefined);
+  it("should init the game correctly", async () => {
+    await cmdStartGame(undefined);
     expect(state?.id).toBeDefined();
     expect(state?.startedAt).toBeDefined();
   });
 
-  it("should reset game", () => {
-    cmdStartGame(undefined);
-    cmdPlayerJoin({ playerName: "Franck" });
-    cmdStartGame(undefined);
-    expect(state?.players).toBe({});
+  it("should reset game", async () => {
+    await cmdStartGame(undefined);
+    await cmdPlayerJoin({ playerName: "Franck" });
+    await cmdStartGame(undefined);
+    expect(state?.players).toEqual({});
   });
 });

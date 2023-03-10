@@ -1,5 +1,9 @@
 import { AsyncCommand, Command, Reducer } from "./types";
 
+export interface StateLoader<S> {
+  (_: undefined): Promise<S>;
+}
+
 export interface EventHandler<E> {
   (event: E): Promise<E>;
 }
@@ -9,34 +13,33 @@ export interface StateHandler<S> {
 }
 
 export function pipeCommand<O, E, S>(
-  initalState: S,
+  getState: StateLoader<S>,
   command: Command<S, O, E>,
   eventHandler: EventHandler<E>,
   reducer: Reducer<S, E>,
   stateHandler: StateHandler<S>
 ): (options: O) => Promise<S> {
-  let state = initalState;
   return async function (options: O) {
-    return eventHandler(command(initalState, options)).then((event: E) => {
-      state = reducer(state, event);
-      return stateHandler(state);
+    const state = await getState(undefined);
+    return eventHandler(command(state, options)).then((event: E) => {
+      return stateHandler(reducer(state, event));
     });
   };
 }
 
 export function pipeAsyncCommand<O, E, S>(
-  initalState: S,
+  getState: StateLoader<S>,
   command: AsyncCommand<S, O, E>,
   eventHandler: EventHandler<E>,
   reducer: Reducer<S, E>,
   stateHandler: StateHandler<S>
 ): (options: O) => void {
-  let state = initalState;
   return function (options: O) {
-    command(state, options, (event: E) => {
-      eventHandler(event);
-      state = reducer(state, event);
-      stateHandler(state);
+    getState(undefined).then((state) => {
+      command(state, options, (event: E) => {
+        eventHandler(event);
+        stateHandler(reducer(state, event));
+      });
     });
   };
 }

@@ -1,7 +1,7 @@
 import { AppendEvent, StreamEvents, SaveState, LoadState } from "./types";
 import { promisify } from "../utils";
 
-export function createStateStore<S>() {
+export function createStateStore<S>(defaultState: S) {
   const states: Record<string, S> = {};
 
   const save: SaveState<S> = (key) =>
@@ -12,7 +12,7 @@ export function createStateStore<S>() {
 
   const load: LoadState<S> = (key) =>
     promisify<undefined, S>(() => {
-      return states[key];
+      return states[key] || defaultState;
     });
 
   return { save, load };
