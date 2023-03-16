@@ -1,5 +1,5 @@
 export interface AppendEvent<E> {
-  (aggregateId: string): (event: E) => Promise<E>;
+  (aggregateId: string): (event: E) => Promise<void>;
 }
 
 export interface StreamEvents<E> {
@@ -7,13 +7,13 @@ export interface StreamEvents<E> {
 }
 
 export interface SaveState<S> {
-  (objectId: string): (state: S) => Promise<S>;
+  (objectId: string): (state: S) => Promise<void>;
 }
 
-export interface ResetState<S> {
-  (objectId: string): (_: undefined) => Promise<S>;
+export interface ResetState {
+  (objectId: string): () => Promise<void>;
 }
 
 export interface LoadState<S> {
-  (objectId: string): (_: undefined) => Promise<S>;
+  (objectId: string): () => Promise<S>;
 }

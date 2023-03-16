@@ -14,7 +14,10 @@ const schema = {
 export type Options = JTDDataType<typeof schema>;
 const validate = createValidator<Options>(schema);
 
-const playerJoin: GameCommand<Options, PlayerJoined> = (game, options) => {
+const playerJoin: GameCommand<Options, PlayerJoined> = (
+  game,
+  options
+): PlayerJoined => {
   validate(options);
   if (!game.id) throw new GameError("no game started");
   Object.keys(game.players)

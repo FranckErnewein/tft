@@ -1,10 +1,12 @@
 import { timestamp } from "../../utils";
-import { Command } from "./types";
+import { GameCommand } from "../types";
 import { EventType, BetTimeEnded } from "../events";
 import { RoundStatus } from "../types";
 import { GameError } from "../errors";
 
-const endBet: Command = (state): BetTimeEnded => {
+export interface Options {}
+
+const endBet: GameCommand<{}, BetTimeEnded> = (state) => {
   if (
     !state.currentRound ||
     state.currentRound.status !== RoundStatus.BET_TIME

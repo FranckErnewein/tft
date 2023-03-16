@@ -5,21 +5,25 @@ import {
   LoadState,
   ResetState,
 } from "./types";
-import { promisify } from "../utils";
+import {
+  promisify,
+  promisifyToNothing,
+  promisifyFromAndToNothing,
+} from "../utils";
 
 export function createStateStore<S>(defaultState: S) {
   const states: Record<string, S> = {};
 
-  const reset: ResetState<S> = (key: string) =>
-    promisify<undefined, S>(() => {
+  const reset: ResetState = (key: string) =>
+    promisifyFromAndToNothing(() => {
       states[key] = defaultState;
       return defaultState;
     });
 
   const save: SaveState<S> = (key) =>
-    promisify<S, S>((state) => {
+    promisifyToNothing<S>((state) => {
+      if (!state) throw new Error("state no define");
       states[key] = state;
-      return state;
     });
 
   const load: LoadState<S> = (key) =>
@@ -34,10 +38,10 @@ export function createEventStore<E>() {
   const events: Record<string, E[]> = {};
 
   const append: AppendEvent<E> = (key) =>
-    promisify<E, E>((event) => {
+    promisifyToNothing<E>((event) => {
+      if (!event) throw new Error("event not defined");
       if (!events[key]) events[key] = [];
       events[key].push(event);
-      return event;
     });
 
   const stream: StreamEvents<E> = (key) => (callback) => {

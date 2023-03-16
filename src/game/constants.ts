@@ -1,0 +1,1 @@
+export const DEFAULT_PLAYER_BALANCE = 1000;

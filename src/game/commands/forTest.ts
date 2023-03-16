@@ -1,6 +1,16 @@
 import * as commands from "./";
 import { Game } from "../types";
-import { GameEvent } from "../events";
+import {
+  GameEvent,
+  GameStarted,
+  RoundStarted,
+  BetTimeEnded,
+  BetTimeDecreased,
+  PlayerBet,
+  PlayerLeft,
+  PlayerJoined,
+  PlayerCancelBet,
+} from "../events";
 import reducer from "../reducer";
 import defaultState from "../defaultState";
 import { createEventStore, createStateStore } from "../../stores/inMemory";
@@ -14,41 +24,39 @@ export const reset = _reset("test");
 const saveTestState = save("test");
 const appendTestEvent = append("test");
 
-export const startGame = pipeCommand<undefined, GameEvent, Game>(
-  state,
-  commands.startGame.default,
-  appendTestEvent,
-  reducer,
-  saveTestState
-);
+export const startGame = pipeCommand<
+  commands.startGame.Options,
+  GameStarted,
+  Game
+>(state, commands.startGame.default, appendTestEvent, reducer, saveTestState);
 
 export const playerJoin = pipeCommand<
   commands.playerJoin.Options,
-  GameEvent,
+  PlayerJoined,
   Game
 >(state, commands.playerJoin.default, appendTestEvent, reducer, saveTestState);
 
 export const playerLeave = pipeCommand<
   commands.playerLeave.Options,
-  GameEvent,
+  PlayerLeft,
   Game
 >(state, commands.playerLeave.default, appendTestEvent, reducer, saveTestState);
 
 export const startRound = pipeCommand<
   commands.startRound.Options,
-  GameEvent,
+  RoundStarted,
   Game
 >(state, commands.startRound.default, appendTestEvent, reducer, saveTestState);
 
 export const playerBet = pipeCommand<
   commands.playerBet.Options,
-  GameEvent,
+  PlayerBet,
   Game
 >(state, commands.playerBet.default, appendTestEvent, reducer, saveTestState);
 
 export const playerCancelBet = pipeCommand<
   commands.playerCancelBet.Options,
-  GameEvent,
+  PlayerCancelBet,
   Game
 >(
   state,
@@ -58,7 +66,7 @@ export const playerCancelBet = pipeCommand<
   saveTestState
 );
 
-export const endBet = pipeCommand<undefined, GameEvent, Game>(
+export const endBet = pipeCommand<commands.endBet.Options, BetTimeEnded, Game>(
   state,
   commands.endBet.default,
   appendTestEvent,
@@ -68,7 +76,7 @@ export const endBet = pipeCommand<undefined, GameEvent, Game>(
 
 export const scheduleEndBet = pipeAsyncCommand<
   commands.scheduleEndBet.Options,
-  GameEvent,
+  BetTimeDecreased | BetTimeEnded,
   Game
 >(
   state,

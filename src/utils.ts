@@ -2,9 +2,27 @@ import Ajv from "ajv/dist/jtd";
 import { DefinedError } from "ajv";
 import { CommandOptionError } from "./errors";
 
-export function promisify<T, U>(func: (x: T) => U): (x: T) => Promise<U> {
-  return function (x: T): Promise<U> {
+export function promisify<T, U>(func: (x?: T) => U): (x?: T) => Promise<U> {
+  return function (x?: T): Promise<U> {
     return Promise.resolve(func(x));
+  };
+}
+
+export function promisifyToNothing<T>(
+  func: (x: T) => void
+): (x: T) => Promise<void> {
+  return function (x: T): Promise<void> {
+    func(x);
+    return Promise.resolve();
+  };
+}
+
+export function promisifyFromAndToNothing(
+  func: () => void
+): () => Promise<void> {
+  return function (): Promise<void> {
+    func();
+    return Promise.resolve();
   };
 }
 

@@ -45,7 +45,7 @@ const scheduleEndBet: GameAsyncCommand<
       payload: {},
     });
     clearInterval(runningInterval);
-    if (done) done();
+    done();
   }, restTime);
   return () => {
     emit({

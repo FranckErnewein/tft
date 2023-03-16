@@ -3,7 +3,9 @@ import { GameCommand } from "../types";
 import { EventType, GameStarted } from "../events";
 import { timestamp } from "../../utils";
 
-const startGame: GameCommand<undefined, GameStarted> = () => {
+export interface Options {}
+
+const startGame: GameCommand<Options, GameStarted> = () => {
   return {
     type: EventType.GAME_STARTED,
     datetime: timestamp(),

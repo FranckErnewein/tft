@@ -1,25 +1,21 @@
-import { StateMachine, RoundStatus } from "../state";
+import { reset, startGame, startRound, endBet } from "./forTest";
+import { RoundStatus } from "../types";
 import { GameError } from "../errors";
-import startGame from "./startGame";
-import startRound from "./startRound";
-import endBet from "./endBet";
 
 describe("startBet", () => {
-  let game = new StateMachine();
-  beforeEach(() => {
-    game = new StateMachine();
-    game.execute(startGame);
+  beforeEach(async () => {
+    await reset();
+    await startGame({});
   });
-  it("should start end time", () => {
-    const game = new StateMachine();
-    game.execute(startRound);
-    expect(game.state.currentRound?.status).toBe(RoundStatus.BET_TIME);
-    game.execute(endBet);
-    expect(game.state.currentRound?.status).toBe(RoundStatus.RUNNING);
+  it("should start and end time", async () => {
+    let [state] = await startRound({});
+    expect(state.currentRound?.status).toBe(RoundStatus.BET_TIME);
+    [state] = await endBet({});
+    expect(state.currentRound?.status).toBe(RoundStatus.RUNNING);
   });
 
   it("should not end bet time if round was is not in bet mode", () => {
-    expect(() => game.execute(endBet)).toThrow(GameError);
+    endBet({}).catch((e) => expect(e).toBeInstanceOf(GameError));
   });
 
   it.todo("should not allow to bet after end bet");

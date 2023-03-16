@@ -45,5 +45,5 @@ export interface Bet {
   amountCents: number;
 }
 
-export type GameCommand<O, E = GameEvent> = Command<Game, O, E>;
-export type GameAsyncCommand<O, E = GameEvent> = AsyncCommand<Game, O, E>;
+export type GameCommand<O, E extends GameEvent> = Command<Game, O, E>;
+export type GameAsyncCommand<O, E extends GameEvent> = AsyncCommand<Game, O, E>;
