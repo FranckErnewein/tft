@@ -1,4 +1,4 @@
-import { RoundResult, RoundStatus } from "../state";
+import { RoundResult, RoundStatus } from "../types";
 import { roundResultForPlayer } from "./queries";
 
 const defaultRound = {

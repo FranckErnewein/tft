@@ -1,4 +1,4 @@
-import { Round, Bet } from "../state";
+import { Round, Bet } from "../types";
 
 export function amountBet(round: Round) {
   const { result } = round;

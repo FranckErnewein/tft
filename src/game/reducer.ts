@@ -14,7 +14,7 @@ import {
 import { Game, Player, Round, RoundStatus } from "./types";
 import { GameError, StateError } from "./errors";
 import defaultState from "./defaultState";
-import { amountBet } from "../round/queries";
+import { amountBet } from "./round/queries";
 
 export interface Reducer<E extends GameEvent> {
   (state: Game, abstractEvent: E): Game;
