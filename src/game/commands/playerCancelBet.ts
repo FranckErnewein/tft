@@ -1,5 +1,6 @@
 import { JTDDataType } from "ajv/dist/jtd";
-import { timestamp, createValidator } from "../../utils";
+import { createValidator } from "../utils";
+import { timestamp } from "../../utils";
 import { GameCommand } from "../types";
 import { EventType, PlayerCancelBet } from "../events";
 import { GameError } from "../errors";

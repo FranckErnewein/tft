@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { JTDDataType } from "ajv/dist/jtd";
-import { timestamp, createValidator } from "../../utils";
+import { createValidator } from "../utils";
+import { timestamp } from "../../utils";
 import { GameCommand } from "../types";
 import { EventType, PlayerJoined } from "../events";
 import { GameError } from "../errors";
