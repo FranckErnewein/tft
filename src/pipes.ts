@@ -53,9 +53,9 @@ export function pipeAsyncCommand<O, E, S>(
         (event: E) => {
           state = reducer(state, event);
           events.push(event);
-          if (emit) emit(event);
           eventHandler(event);
           stateHandler(state);
+          if (emit) emit(event);
         },
         () => {
           if (done) done();
