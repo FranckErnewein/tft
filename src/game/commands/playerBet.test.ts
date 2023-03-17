@@ -1,121 +1,108 @@
-import { StateMachine, Player, RoundResult } from "../state";
-import { GameError } from "../errors";
+import { Player, RoundResult } from "../types";
 import { DEFAULT_PLAYER_BALANCE } from "../constants";
+import { GameError } from "../errors";
 import {
-  GameStarted,
-  PlayerJoined,
-  RoundStarted,
-  PlayerBet,
-  PlayerLeft,
-} from "../events";
-import startGame from "./startGame";
-import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
-import startRound from "./startRound";
-import playerBet, { Options as PlayerBetOptions } from "./playerBet";
-import playerLeave, { Options as PlayerLeaveOptions } from "./playerLeave";
+  reset,
+  startGame,
+  playerJoin,
+  startRound,
+  playerBet,
+  playerLeave,
+} from "./forTest";
 
 describe("playerBet", () => {
-  let game = new StateMachine();
   let player: Player | null = null;
-  beforeEach(() => {
-    game = new StateMachine();
-    game.execute<GameStarted>(startGame);
-    const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
-      playerName: "Franck",
-    });
+  beforeEach(async () => {
+    await reset();
+    await startGame({});
+    const [_, event] = await playerJoin({ playerName: "John" });
     player = event.payload.player;
-    game.execute<RoundStarted>(startRound);
+    await startRound({});
   });
-  it("should bet: create a new bet and reduce player balance", () => {
+
+  it("should bet: create a new bet and reduce player balance", async () => {
     if (!player) throw "player not found";
-    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+    const [{ currentRound, players }] = await playerBet({
       amountCents: 200,
       forecast: RoundResult.ANSWER_A,
       playerId: player.id,
     });
-    expect(game.state.currentRound?.bets[player.id].amountCents).toBe(200);
-    expect(game.state.currentRound?.bets[player.id].expectedResult).toBe(
-      RoundResult.ANSWER_A
-    );
-    expect(game.state.players[player.id]?.balanceCents).toBe(800);
+    const bet = currentRound?.bets[player.id];
+    expect(bet?.amountCents).toBe(200);
+    expect(bet?.expectedResult).toBe(RoundResult.ANSWER_A);
+    expect(players[player.id]?.balanceCents).toBe(800);
   });
 
-  it("should reject bet amount is superior to player's balance", () => {
-    expect(() => {
-      if (!player) throw "player not found";
-      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
-        amountCents: 1200,
-        forecast: RoundResult.ANSWER_A,
-        playerId: player.id,
-      });
-    }).toThrow(GameError);
-  });
-
-  it("should edit a bet", () => {
+  it("should reject bet amount is superior to player's balance", async () => {
     if (!player) throw "player not found";
-    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+    playerBet({
+      amountCents: 1200,
+      forecast: RoundResult.ANSWER_A,
+      playerId: player.id,
+    }).catch((e) => expect(e).toBeInstanceOf(GameError));
+  });
+
+  it("should edit a bet", async () => {
+    if (!player) throw "player not found";
+    await playerBet({
       amountCents: 800,
       forecast: RoundResult.ANSWER_A,
       playerId: player.id,
     });
-    game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+    const [state] = await playerBet({
       amountCents: 400,
       forecast: RoundResult.ANSWER_B,
       playerId: player.id,
     });
-    expect(game.state.currentRound?.bets[player.id].amountCents).toBe(400);
-    expect(game.state.currentRound?.bets[player.id].expectedResult).toBe(
+    expect(state.currentRound?.bets[player.id].amountCents).toBe(400);
+    expect(state.currentRound?.bets[player.id].expectedResult).toBe(
       RoundResult.ANSWER_B
     );
-    expect(game.state.players[player.id]?.balanceCents).toBe(
+    expect(state.players[player.id]?.balanceCents).toBe(
       DEFAULT_PLAYER_BALANCE - 400
     );
   });
 
   it("should reject bet when amount is 0", () => {
-    expect(() => {
-      if (!player) return;
-      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
-        amountCents: 0,
-        forecast: RoundResult.ANSWER_A,
-        playerId: player.id,
-      });
-    }).toThrow(GameError);
+    if (!player) throw "player not found";
+    playerBet({
+      amountCents: 0,
+      forecast: RoundResult.ANSWER_A,
+      playerId: player.id,
+    }).catch((e) => expect(e).toBeInstanceOf(GameError));
   });
 
-  it("should reject bet because game is not in bet phase", () => {
-    game.execute<GameStarted>(startGame); //reset game
-    const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
-      playerName: "Franck",
-    });
+  it("should reject bet because game is not in bet phase", async () => {
+    reset();
+    await startGame({});
+    const [_, event] = await playerJoin({ playerName: "Franck" });
     player = event.payload.player;
-    //avoid startBet command
-    const t = () => {
-      if (!player) throw "player not found";
-      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+    try {
+      await playerBet({
         amountCents: 200,
         forecast: RoundResult.ANSWER_A,
         playerId: player.id,
       });
-    };
-    expect(t).toThrow(GameError);
-    expect(t).toThrow("you can not bet yet");
+    } catch (e) {
+      expect(e).toBeInstanceOf(GameError);
+      expect(e).toHaveProperty("message", "you can not bet yet");
+    }
   });
 
-  it("should reject bet playerId was not found", () => {
+  it("should reject bet playerId was not found", async () => {
     if (!player) throw "player not found";
-    game.execute<PlayerLeft, PlayerLeaveOptions>(playerLeave, {
+    await playerLeave({
       playerId: player.id,
     });
-    const t = () => {
-      if (!player) throw "player not found";
-      game.execute<PlayerBet, PlayerBetOptions>(playerBet, {
+    try {
+      await playerBet({
         amountCents: 200,
         forecast: RoundResult.ANSWER_A,
         playerId: player.id,
       });
-    };
-    expect(t).toThrow(GameError);
-    expect(t).toThrow("player not found");
+    } catch (e) {
+      expect(e).toBeInstanceOf(GameError);
+      expect(e).toHaveProperty("message", "player not found");
+    }
   });
 });

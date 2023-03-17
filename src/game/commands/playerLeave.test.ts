@@ -1,19 +1,11 @@
-import { StateMachine } from "../state";
-import { PlayerJoined, PlayerLeft } from "../events";
-import startGame from "./startGame";
-import playerJoin, { Options as PlayerJoinOptions } from "./playerJoin";
-import playerLeave, { Options as PlayerLeaveOptions } from "./playerLeave";
+import { reset, startGame, playerJoin, playerLeave } from "./forTest";
 
 describe("playerLeave", () => {
-  it("should join and leave", () => {
-    const game = new StateMachine();
-    game.execute(startGame);
-    const event = game.execute<PlayerJoined, PlayerJoinOptions>(playerJoin, {
-      playerName: "Franck",
-    });
-    game.execute<PlayerLeft, PlayerLeaveOptions>(playerLeave, {
-      playerId: event.payload.player.id,
-    });
-    expect(Object.keys(game.state.players)).toHaveLength(0);
+  it("should join and leave", async () => {
+    await reset();
+    await startGame({});
+    const [_, event] = await playerJoin({ playerName: "Franck" });
+    const [state] = await playerLeave({ playerId: event.payload.player.id });
+    expect(Object.keys(state.players)).toHaveLength(0);
   });
 });

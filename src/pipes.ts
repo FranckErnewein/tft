@@ -34,8 +34,16 @@ export function pipeAsyncCommand<O, E, S>(
   eventHandler: EventHandler<E>,
   reducer: Reducer<S, E>,
   stateHandler: StateHandler<S>
-): (options: O) => Promise<[S, E[]]> {
-  return async function (options: O) {
+): (
+  options: O,
+  emit?: (event: E) => void,
+  done?: () => void
+) => Promise<[S, E[]]> {
+  return async function (
+    options: O,
+    emit?: (event: E) => void,
+    done?: () => void
+  ) {
     let state: S = await getState();
     const events: E[] = [];
     return new Promise((resolve) => {
@@ -45,10 +53,12 @@ export function pipeAsyncCommand<O, E, S>(
         (event: E) => {
           state = reducer(state, event);
           events.push(event);
+          if (emit) emit(event);
           eventHandler(event);
-          stateHandler(reducer(state, event));
+          stateHandler(state);
         },
         () => {
+          if (done) done();
           resolve([state, events]);
         }
       );

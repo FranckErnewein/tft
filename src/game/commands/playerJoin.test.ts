@@ -8,7 +8,7 @@ describe("playerJoin", () => {
   });
 
   it("should add new player", async () => {
-    const state = await playerJoin({ playerName: "Franck" });
+    const [state] = await playerJoin({ playerName: "Franck" });
     expect(Object.values(state.players)[0]?.name).toBe("Franck");
   });
 
