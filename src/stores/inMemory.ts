@@ -1,4 +1,5 @@
 import {
+  StateStore,
   AppendEvent,
   StreamEvents,
   SaveState,
@@ -11,7 +12,7 @@ import {
   promisifyFromAndToNothing,
 } from "../utils";
 
-export function createStateStore<S>(defaultState: S) {
+export function createStateStore<S>(defaultState: S): StateStore<S> {
   const states: Record<string, S> = {};
 
   const reset: ResetState = (key: string) =>

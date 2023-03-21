@@ -17,3 +17,9 @@ export interface ResetState {
 export interface LoadState<S> {
   (objectId: string): () => Promise<S>;
 }
+
+export interface StateStore<S> {
+  load: LoadState<S>;
+  reset: ResetState;
+  save: SaveState<S>;
+}
