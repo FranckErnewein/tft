@@ -1,16 +1,20 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Main where
+import Commands
+import Events
+import Web.Scotty
+import Data.UUID
+-- import Data.Monoid (mconcat)
+import System.Random
+import Control.Monad.Trans (liftIO)
 
-import Network.Wai
-import Network.HTTP.Types (status200)
-import Network.Wai.Handler.Warp (run)
+main = scotty 3000 $
+  post "/commands/bookmaker/startGame" $ do
+    id <- liftIO newUUID
+    -- j <- jsonData
+    json $ startGame (show id)
 
-app :: Application
-app _ respond = do
-  putStrLn "I've done some IO here"
-  respond $ responseLBS status200 [("Content-Type", "text/plain")] "Hello, Web!"
+newUUID :: IO UUID
+newUUID = randomIO
 
-main :: IO ()
-main = do
-  putStrLn "http://localhost:8080/"
-  run 8080 app
+startGame :: String -> Event
+startGame = GameStarted
