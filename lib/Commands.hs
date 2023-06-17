@@ -9,7 +9,7 @@ import GHC.Generics
 data RoundResult = ChoiceA | ChoiceB deriving (Generic, Show)
 
 data CommandOption
-  = BookmakerStartGame {}
+  = BookmakerStartGame {uuid :: String}
   | PlayerJoin { uuid :: String, name :: String }
   | PlayerLeave { uuid :: String }
   | PlayerBet { uuid :: String, result :: RoundResult, amountCent :: Int }
